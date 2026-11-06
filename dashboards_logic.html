@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nóstimo — Role Interfaces Prototype</title>
+<style>
+:root{--brown:#4b3326;--brown2:#604536;--olive:#7e8d63;--olive-dark:#687750;--cream:#f4ece2;--sand:#e9dbc7;--paper:#fff;--ink:#302820;--muted:#8b8178;--line:#eee7df;--rose:#d6aaa7;--gold:#d7b994;--shadow:0 5px 20px #38271912}
+*{box-sizing:border-box}body{margin:0;background:#f8f6f2;color:var(--ink);font-family:Inter,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:5}.brand{font-family:Georgia,serif;font-size:27px;color:var(--brown);letter-spacing:1px;white-space:nowrap}.brand b{color:var(--olive);font-size:30px}.top-right{display:flex;align-items:center;gap:12px}.role-select{border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:white;color:var(--brown)}.avatar{width:38px;height:38px;border-radius:50%;background:var(--olive);color:white;display:grid;place-items:center;font-weight:700}.shell{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 72px)}.sidebar{background:var(--brown);color:#fff;padding:25px 16px;display:flex;flex-direction:column;gap:8px}.side-brand{font:22px Georgia,serif;padding:0 12px 20px;color:#f4e9d9}.role-label{font-size:10px;letter-spacing:1.8px;color:#c8b7a7;text-transform:uppercase;padding:10px 12px 6px}.nav-btn{border:0;background:transparent;color:#e9dfd5;text-align:left;padding:12px;border-radius:9px;display:flex;gap:11px;align-items:center;font-size:13px}.nav-btn:hover,.nav-btn.active{background:var(--olive);color:#fff}.nav-icon{width:19px;text-align:center;font-size:16px}.side-bottom{margin-top:auto;padding:15px 12px;color:#c8b7a7;font-size:11px;border-top:1px solid #ffffff20}.main{padding:30px 34px 55px;min-width:0}.breadcrumb{color:var(--muted);font-size:12px;margin-bottom:12px}.heading-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:25px}.page-title{font: bold 32px Georgia,serif;color:var(--brown);margin:0 0 7px}.subtitle{color:var(--muted);font-size:13px;margin:0}.btn{border:0;border-radius:8px;background:var(--brown);color:white;padding:11px 17px;font-weight:600;font-size:12px}.btn:hover{background:var(--brown2)}.btn.olive{background:var(--olive)}.btn.olive:hover{background:var(--olive-dark)}.btn.light{background:#f0e8de;color:var(--brown)}.btn.rose{background:var(--rose);color:var(--brown)}.btn.small{padding:8px 11px;font-size:11px}.grid{display:grid;gap:18px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:22px}.stat,.panel,.card{background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}.stat{padding:19px}.stat-top{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.stat-icon{width:34px;height:34px;border-radius:10px;background:var(--cream);display:grid;place-items:center}.stat-value{font: bold 27px Georgia,serif;color:var(--brown);margin:13px 0 4px}.stat-note{font-size:11px;color:var(--olive-dark)}.two-col{grid-template-columns:1.45fr 1fr}.three-col{grid-template-columns:repeat(3,minmax(0,1fr))}.panel{padding:21px;margin-bottom:18px}.panel h2,.panel h3{font-family:Georgia,serif;color:var(--brown);margin:0 0 17px}.panel h2{font-size:21px}.panel h3{font-size:17px}.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.panel-head h2,.panel-head h3{margin:0}.muted{color:var(--muted)}.smalltext{font-size:11px;color:var(--muted)}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:570px}th{text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:12px 10px;border-bottom:1px solid var(--line)}td{padding:14px 10px;border-bottom:1px solid #f2eee9;font-size:12px}tr:last-child td{border-bottom:0}.status{display:inline-flex;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:700;background:#edf1e7;color:#62744e}.status.pending{background:#fff2dc;color:#a87932}.status.progress{background:#eaf0f8;color:#55718f}.status.cancel{background:#f8e9e7;color:#a65c55}.status.neutral{background:#f1eee9;color:#7b7066}.search{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff;min-width:190px;font-size:12px}.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.product-row{display:flex;align-items:center;gap:12px}.product-img{width:54px;height:54px;border-radius:10px;background:var(--sand);display:grid;place-items:center;font-size:27px}.bar{height:8px;background:#f0ece6;border-radius:10px;overflow:hidden}.bar span{display:block;height:100%;background:var(--olive);border-radius:10px}.activity{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}.activity:last-child{border:0}.dot{width:9px;height:9px;border-radius:50%;background:var(--olive);margin-top:4px;flex:none}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:11px;font-weight:700;color:#62584f}.field input,.field select,.field textarea{border:1px solid #e5ddd3;border-radius:8px;padding:11px;background:#fff;color:var(--ink);outline:none}.field textarea{min-height:95px;resize:vertical}.field.full{grid-column:1/-1}.product-hero{display:grid;grid-template-columns: minmax(250px,.9fr) 1.1fr;gap:28px;align-items:center}.product-photo{min-height:330px;border-radius:16px;background:linear-gradient(145deg,#eadcc7,#f6eee3);display:grid;place-items:center;font-size:130px}.price{font: bold 25px Georgia,serif;color:var(--brown)}.tag{display:inline-block;padding:6px 9px;border-radius:20px;background:#eef1e8;color:var(--olive-dark);font-size:10px;margin:4px 4px 4px 0}.qty{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:8px;padding:7px;width:max-content}.qty button{border:0;background:transparent;font-size:17px;color:var(--brown)}.support-layout{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.ticket{padding:14px;border:1px solid var(--line);border-radius:10px;margin-bottom:10px}.ticket-top{display:flex;justify-content:space-between;gap:10px}.profile-card{background:var(--olive);color:white;border-radius:13px;padding:24px;text-align:center}.profile-circle{width:68px;height:68px;border-radius:50%;background:#566542;margin:0 auto 12px;display:grid;place-items:center;font-size:24px;font-weight:700}.quick-link{padding:14px;border-radius:10px;background:#faf7f2;border:1px solid var(--line);font-size:12px}.footer-note{color:var(--muted);font-size:10px;margin-top:25px;text-align:center}.mobile-menu{display:none}
+@media(max-width:950px){.shell{grid-template-columns:205px 1fr}.stats{grid-template-columns:repeat(2,1fr)}.main{padding:24px 20px}.two-col,.support-layout{grid-template-columns:1fr}}
+@media(max-width:650px){.topbar{padding:0 14px;height:62px}.brand{font-size:22px}.mobile-menu{display:block;border:0;background:none;font-size:22px;color:var(--brown)}.shell{display:block}.sidebar{display:none;position:fixed;z-index:8;top:62px;bottom:0;width:260px;overflow:auto}.sidebar.open{display:flex}.main{padding:22px 14px}.heading-row{flex-direction:column}.page-title{font-size:27px}.stats{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:13px}.stat-value{font-size:22px}.three-col,.product-hero{grid-template-columns:1fr}.product-photo{min-height:230px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+
+/* Added interface details */
+.field input[type="file"]{padding:9px;background:#faf7f2}
+.field input[type="checkbox"]{width:auto;accent-color:var(--olive)}
+.quick-link .stat-value{font-size:23px}
+@media(max-width:650px){.toolbar{align-items:stretch}.toolbar .search{min-width:0;flex:1}}
+
+/* Top navigation shared by every Nóstimo role */
+.topbar{height:76px;padding:0 4.2%;gap:28px;display:flex;align-items:center}
+.brand{flex:0 0 auto}
+.top-navigation{display:flex;align-items:center;justify-content:center;gap:clamp(14px,2.4vw,36px);flex:1;min-width:0}
+.top-nav-link{border:0;background:transparent;color:#5d5148;padding:12px 2px;font-size:13px;white-space:nowrap;position:relative}
+.top-nav-link:hover,.top-nav-link.active{color:var(--brown);font-weight:700}
+.top-nav-link.active:after{content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;background:var(--olive);border-radius:2px}
+.top-right{flex:0 0 auto;gap:10px}
+.mobile-menu{display:grid;place-items:center;width:42px;height:42px;border:0;background:transparent;color:var(--brown);font-size:26px;line-height:1;cursor:pointer}
+.shell{display:block;min-height:calc(100vh - 76px)}
+.main{max-width:1500px;margin:0 auto;padding:30px 4.2% 55px}
+.sidebar{display:none;position:fixed;z-index:20;top:76px;right:3.8%;left:auto;width:min(330px,92vw);max-height:calc(100vh - 92px);overflow:auto;background:#fff;color:var(--ink);padding:14px;border:1px solid var(--line);border-radius:0 0 14px 14px;box-shadow:0 14px 35px #38271924;gap:4px}
+.sidebar.open{display:flex}
+.menu-heading{display:flex;justify-content:space-between;align-items:center;padding:5px 8px 12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.menu-heading .role-label{color:var(--muted);padding:0;font-size:10px}
+.menu-close{border:0;background:transparent;color:var(--brown);font-size:24px;cursor:pointer}
+.sidebar .nav-btn{color:var(--brown);padding:11px 12px}
+.sidebar .nav-btn:hover,.sidebar .nav-btn.active{background:#eef1e8;color:var(--olive-dark)}
+.sidebar .side-bottom{color:var(--muted);border-top:1px solid var(--line);margin-top:10px}
+@media(max-width:850px){.topbar{gap:14px;padding:0 18px}.top-navigation{gap:14px}.top-nav-link{font-size:12px}.role-select{max-width:135px}}
+@media(max-width:650px){.topbar{height:64px;padding:0 14px;gap:8px}.brand{font-size:22px}.brand b{font-size:25px}.top-navigation{justify-content:flex-start;gap:12px;overflow-x:auto;scrollbar-width:none}.top-navigation::-webkit-scrollbar{display:none}.top-nav-link{font-size:11px;padding:10px 0}.top-right{gap:5px}.role-select{max-width:112px;padding:8px 5px;font-size:10px}.avatar{width:30px;height:30px;font-size:11px}.mobile-menu{display:grid;width:34px;font-size:24px}.shell{min-height:calc(100vh - 64px)}.sidebar{top:64px;right:10px}.main{padding:22px 14px 45px}}
+@media(max-width:420px){.topbar{flex-wrap:wrap;height:auto;min-height:64px;padding:8px 12px}.brand{font-size:20px}.top-navigation{order:3;flex-basis:100%;justify-content:center;overflow:visible;gap:clamp(12px,4vw,20px)}.top-nav-link{font-size:11px}.top-right{margin-left:auto}.sidebar{top:100px}}
+</style></head>
+<body>
+<header class="topbar"><div class="brand"><b>◉</b>Nóstimo</div><nav class="top-navigation" id="topNavigation" aria-label="Main navigation"></nav><div class="top-right"><select class="role-select" id="roleSelect" onchange="changeRole(this.value)" aria-label="Switch interface"><option value="client">Client interface</option><option value="worker">Worker interface</option><option value="deliverer">Deliverer interface</option><option value="admin">Admin interface</option></select><div class="avatar" id="avatar">ZO</div><button class="mobile-menu" onclick="toggleMenu()" aria-label="Open menu" aria-expanded="false" title="More pages">☰</button></div></header>
+<div class="shell"><aside class="sidebar" id="sidebar"><div class="menu-heading"><span class="role-label" id="roleLabel">CLIENT WORKSPACE</span><button class="menu-close" onclick="toggleMenu()" aria-label="Close menu">×</button></div><nav id="navigation" aria-label="More pages"></nav><div class="side-bottom">Made with love by Nóstimo<br>Prototype · Demo data only</div></aside><main class="main" id="main"></main></div>
+<script>
+const menus={
+client:[['Home','⌂'],['Products','▧'],['Product Details','◇'],['Favorites','♡'],['My Cart','🛒'],['Checkout','▣'],['Card Payment','▣'],['My Orders','▤'],['Reviews','☆'],['Order Details','☷'],['Track Delivery','➜'],['My Addresses','⌖'],['Customer Support','♡'],['My Profile','◉'],['Login','↪'],['Register','＋'],['Forgot Password','?'],['Reset Password','✦']],
+worker:[['Dashboard','⌂'],['Available Orders','＋'],['Assigned Orders','▤'],['Order History','◷'],['Availability','◉'],['Profile','♙']],
+deliverer:[['Dashboard','⌂'],['Available Deliveries','＋'],['My Deliveries','➜'],['Delivery History','◷'],['Availability','◉'],['Profile','♙']],
+admin:[['Dashboard','⌂'],['Users','♙'],['Employees','♧'],['Products','▧'],['Categories','▦'],['Weekly Specials','✦'],['Orders','▤'],['Assignments','⇄'],['Deliveries','➜'],['Payments','＄'],['Analytics','▥'],['Support','♡'],['Settings','⚙'],['Admin Profile','◉']]
+};
+let role='client',page='Home';
+let availableOrders=[
+ {id:'#NS-1050',client:'Salma R.',items:'3 items',received:'11:05',status:'Waiting for worker'},
+ {id:'#NS-1049',client:'Aya N.',items:'2 items',received:'10:58',status:'Waiting for worker'}
+];
+let workerOrders=[
+ {id:'#NS-1048',client:'Meriem A.',items:'5 items',received:'10:42',status:'Preparing'},
+ {id:'#NS-1047',client:'Yasmine B.',items:'2 items',received:'10:18',status:'Ready'}
+];
+let availableDeliveries=[
+ {id:'#NS-1047',client:'Yasmine B.',address:'Centre-ville, Tétouan',ready:'10:18',status:'Ready for pickup'},
+ {id:'#NS-1046',client:'Sara M.',address:'Mhannech, Tétouan',ready:'10:12',status:'Ready for pickup'}
+];
+let myDeliveries=[
+ {id:'#NS-1048',client:'Meriem A.',address:'Centre-ville, Tétouan',ready:'10:45',status:'Out for delivery'}
+];
+let userRoles=[
+ {name:'Meriem A.',email:'meriem@email.com',role:'Client',status:'Active'},
+ {name:'Yasmine B.',email:'yasmine@email.com',role:'Client',status:'Active'},
+ {name:'Nadia E.',email:'nadia@nostimo.bake',role:'Worker',status:'Active'},
+ {name:'Omar K.',email:'omar@nostimo.bake',role:'Deliverer',status:'Active'}
+];
+const orders=[['#NS-1048','Meriem A.','5 items','$28.45','Preparing','Today, 10:42'],['#NS-1047','Yasmine B.','2 items','$13.98','Ready','Today, 10:18'],['#NS-1046','Sara M.','3 items','$19.50','Delivered','Yesterday'],['#NS-1045','Aya N.','1 item','$4.99','Pending','Yesterday']];
+// Demo reviews. In a real application these records must be stored in the database.
+let storeReviews=[
+ {name:'Meriem A.',rating:5,text:'Everything was fresh and beautifully packed. I will order again!',date:'Recently'},
+ {name:'Aya N.',rating:4,text:'Lovely cookies and friendly service.',date:'Recently'}
+];
+let productReviews={
+ 'Red Velvet Cookie':[
+  {name:'Sara M.',rating:5,text:'Soft, rich and delicious. The white chocolate is perfect.'},
+  {name:'Meriem A.',rating:4,text:'Really good texture and flavour.'}
+ ]
+};
+let deliveredProducts=[
+ {order:'#NS-1039',product:'Red Velvet Cookie',delivered:true},
+ {order:'#NS-1039',product:'Matcha & White Chocolate Cookie',delivered:true},
+ {order:'#NS-1024',product:'Golden Brownie',delivered:true}
+];
+let submittedStoreReview=false;
+let submittedProductReviews=[];
+
+const deliveries=[['#NS-1048','Meriem A.','Centre-ville, Tétouan','10:45','Out for delivery'],['#NS-1042','Salma R.','Mhannech, Tétouan','11:20','Assigned'],['#NS-1039','Aya N.','Martil, Morocco','Yesterday','Delivered']];
+const primaryNavigation={
+  client:['Home','Products','My Orders','Reviews'],
+  worker:['Dashboard','Available Orders','Order History'],
+  deliverer:['Dashboard','Available Deliveries','Delivery History'],
+  admin:['Dashboard','Orders','Analytics']
+};
+function toggleMenu(){
+  const menu=document.getElementById('sidebar');
+  const button=document.querySelector('.mobile-menu');
+  const opened=menu.classList.toggle('open');
+  if(button)button.setAttribute('aria-expanded',String(opened));
+}
+function changeRole(r){role=r;page=menus[r][0][0];document.getElementById('avatar').textContent={client:'ZO',worker:'WK',deliverer:'DL',admin:'AD'}[r];document.getElementById('roleLabel').textContent=r.toUpperCase()+' — MORE PAGES';document.getElementById('sidebar').classList.remove('open');render()}
+function go(p){page=p;document.getElementById('sidebar').classList.remove('open');const button=document.querySelector('.mobile-menu');if(button)button.setAttribute('aria-expanded','false');render()}
+function nav(){
+  const primary=primaryNavigation[role]||[];
+  document.getElementById('topNavigation').innerHTML=primary.map(p=>`<button class="top-nav-link ${page===p?'active':''}" onclick="go('${p.replace(/'/g,"\\'")}')">${p==='Products'?'Menu':p==='Weekly Specials'?'Special':p}</button>`).join('');
+  document.getElementById('navigation').innerHTML=menus[role].filter(([p])=>!primary.includes(p)).map(([p,i])=>`<button class="nav-btn ${page===p?'active':''}" onclick="go('${p.replace(/'/g,"\\'")}')"><span class="nav-icon">${i}</span>${p}</button>`).join('');
+}
+function heading(title,sub,action=''){return `<div class="breadcrumb">${role[0].toUpperCase()+role.slice(1)} / ${title}</div><div class="heading-row"><div><h1 class="page-title">${title}</h1><p class="subtitle">${sub||'Manage and follow your Nóstimo workspace.'}</p></div>${action}</div>`}
+function stats(items){return `<div class="grid stats">${items.map(([label,value,note,icon])=>`<div class="stat"><div class="stat-top"><span>${label}</span><span class="stat-icon">${icon}</span></div><div class="stat-value">${value}</div><div class="stat-note">${note}</div></div>`).join('')}</div>`}
+function panel(title,content,extra=''){return `<section class="panel"><div class="panel-head"><h2>${title}</h2>${extra}</div>${content}</section>`}
+function table(headers,rows){return `<div class="table-wrap"><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+function status(s){let c=s.toLowerCase().includes('deliver')?'':s.toLowerCase().includes('prepar')||s.toLowerCase().includes('progress')||s.toLowerCase().includes('out for')?'progress':s.toLowerCase().includes('pending')||s.toLowerCase().includes('assigned')||s.toLowerCase().includes('ready')?'pending':'neutral';return `<span class="status ${c}">${s}</span>`}
+function activities(items){return items.map(x=>`<div class="activity"><span class="dot"></span><div>${x}<div class="smalltext">A few minutes ago</div></div></div>`).join('')}
+function dashboard(kind){
+let data=kind==='Worker'?[['Assigned today','08','2 orders completed','▤'],['In preparation','03','Keep orders moving','◷'],['Ready for pickup','02','Awaiting deliverer','✓'],['Availability','Online','Accepting assignments','◉']]:kind==='Deliverer'?[['Assigned deliveries','05','2 completed today','➜'],['To pick up','02','At the bakery','▣'],['In transit','01','On the way','⌖'],['Completed today','02','Great work','✓']]:[['Total orders','248','+12% this month','▤'],['Revenue','$4,820','+8.4% this month','＄'],['Active clients','186','+14 this month','♙'],['Products','24','3 categories','▧']];
+let recent=kind==='Worker'?[['#NS-1048','Meriem A.','5 items',status('Preparing'),'10:42'],['#NS-1047','Yasmine B.','2 items',status('Ready'),'10:18'],['#NS-1043','Salma R.','3 items',status('Pending'),'09:55']]:kind==='Deliverer'?[['#NS-1048','Meriem A.','Centre-ville',status('Out for delivery'),'10:45'],['#NS-1042','Salma R.','Mhannech',status('Assigned'),'11:20'],['#NS-1039','Aya N.','Martil',status('Delivered'),'Yesterday']]:orders.slice(0,3).map(o=>[o[0],o[1],o[2],status(o[4]),o[5]]);
+let target=kind==='Admin'?'Orders':kind==='Worker'?'Assigned Orders':'My Deliveries';
+return heading(kind+' Dashboard',kind==='Admin'?'A clear overview of your bakery operations.':`Welcome back. Here is your ${kind.toLowerCase()} activity at a glance.`)+stats(data)+`<div class="grid two-col">${panel(kind==='Admin'?'Recent Orders':kind==='Worker'?'Orders to Prepare':'Upcoming Deliveries',table(['Reference','Customer','Details','Status','Time'],recent),`<button class="btn light small" onclick="go('${target}')">View all</button>`)}${panel('Recent Activity',activities(kind==='Admin'?['New order received — #NS-1048','A new client registered','Golden Brownie stock updated']:kind==='Worker'?['Order #NS-1047 marked ready','New order assigned to you','Availability set to online']:['Delivery #NS-1039 completed','New delivery assigned','Pickup confirmed']))}</div>`;
+}
+function profile(title){return heading(title,'Manage your personal information and account preferences.')+`<div class="grid two-col"><div class="profile-card"><div class="profile-circle">${role==='worker'?'WK':role==='deliverer'?'DL':'AD'}</div><h2 style="font:22px Georgia;margin:0 0 6px">${role==='worker'?'Nóstimo Worker':role==='deliverer'?'Nóstimo Deliverer':'Nóstimo Admin'}</h2><p style="font-size:12px;opacity:.85">team@nostimo.bake</p><span class="tag" style="background:#ffffff25;color:white">Active account</span></div>${panel('Personal Information',`<div class="form-grid"><div class="field"><label>Full name</label><input value="${role==='admin'?'Admin User':role==='worker'?'Nóstimo Worker':'Nóstimo Deliverer'}"></div><div class="field"><label>Email address</label><input value="team@nostimo.bake"></div><div class="field"><label>Phone number</label><input value="+212 600 000 000"></div><div class="field"><label>Address</label><input placeholder="Enter your address"></div><div class="field full"><button class="btn" onclick="toast('Profile changes saved in this demo.')">Save Changes</button></div></div>`)}</div>`}
+function productDetails(){return heading('Product Details','A closer look at one Nóstimo favourite.')+`<section class="panel product-hero"><div class="product-photo">🍪</div><div><span class="tag">COOKIE · BEST SELLER</span><h2 style="font:32px Georgia;color:var(--brown);margin:12px 0">Red Velvet Cookie</h2><p class="muted" style="line-height:1.8;font-size:13px">A soft, rich red velvet cookie with a delicate cocoa flavour and generous white chocolate pieces. Baked fresh with care, for a little moment of comfort.</p><div class="price">$4.99</div><p class="smalltext">★★★★★ &nbsp; Customer favourite</p><div style="margin:18px 0"><span class="tag">Freshly baked</span><span class="tag">White chocolate</span><span class="tag">Contains gluten & dairy</span></div><div class="toolbar"><div class="qty"><button onclick="qty(-1)">−</button><b id="qty">1</b><button onclick="qty(1)">+</button></div><button class="btn" onclick="toast('Red Velvet Cookie added to cart.')">Add to Cart</button><button class="btn light" onclick="toast('Added to favourites.')">♡ Favourite</button></div><p class="smalltext" style="margin-top:18px">Availability: <b style="color:var(--olive-dark)">In stock · Baked daily</b></p></div></section><div class="grid three-col">${[['🍪','Freshly baked','Prepared in small batches.'],['♡','Made with care','Thoughtful ingredients and recipes.'],['☕','Perfect pairing','Enjoy with your favourite matcha.']].map(x=>`<div class="quick-link"><div style="font-size:23px">${x[0]}</div><b>${x[1]}</b><p class="muted">${x[2]}</p></div>`).join('')}</div>
+ <div class="panel"><div class="panel-head"><h2>Customer reviews · Red Velvet Cookie</h2><span class="tag">${(productReviews['Red Velvet Cookie']||[]).length} reviews</span></div>
+ ${(productReviews['Red Velvet Cookie']||[]).map(r=>`<div class="activity"><div style="flex:1"><div style="color:#c49a53;letter-spacing:2px">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div><p style="font-size:13px">${r.text}</p><b>${r.name}</b></div></div>`).join('')}
+ ${canReviewProduct('Red Velvet Cookie')?`<div class="review-form"><h3>Share your experience</h3><p class="smalltext">You can review this product because it appears in a delivered order.</p><div class="field"><label>Your rating</label><select id="productRating"><option value="5">★★★★★ · Excellent</option><option value="4">★★★★☆ · Very good</option><option value="3">★★★☆☆ · Good</option><option value="2">★★☆☆☆ · Fair</option><option value="1">★☆☆☆☆ · Poor</option></select></div><div class="field" style="margin-top:10px"><label>Your review</label><textarea id="productReviewText" placeholder="What did you think about this product?"></textarea></div><button class="btn" style="margin-top:12px" onclick="submitProductReview('Red Velvet Cookie')">Submit product review</button></div>`:`<p class="smalltext">Product reviews are available only after the product has been delivered to you. Visit <a href="#" onclick="go('Reviews');return false">My Reviews</a> to see your review eligibility.</p>`}
+ </div>`}
+function cardPayment(){return heading('Card Payment','Secure payment details for your order.')+`<div class="grid two-col"><div>${panel('Payment Method',`<div class="quick-link" style="margin-bottom:15px"><b>▣ &nbsp; Credit or debit card</b><span class="smalltext" style="float:right">VISA · Mastercard</span></div><div class="form-grid"><div class="field full"><label>Name on card</label><input placeholder="Cardholder name"></div><div class="field full"><label>Card number</label><input placeholder="0000 0000 0000 0000" maxlength="19"></div><div class="field"><label>Expiry date</label><input placeholder="MM / YY"></div><div class="field"><label>CVV</label><input placeholder="123" maxlength="4"></div><div class="field full"><label>Billing address</label><input placeholder="Street, city, postal code"></div></div><p class="smalltext" style="margin:15px 0">🔒 Your payment information is protected. This is a visual prototype; no real payment is processed.</p><button class="btn olive" style="width:100%" onclick="toast('Demo only: payment gateway is not connected.')">Pay $21.56</button>`)}</div><div>${panel('Order Summary',table(['Item','Qty','Price'],[['Red Velvet Cookie','1','$4.99'],['Matcha & White Chocolate','1','$4.99'],['Golden Brownie','1','$4.99'],['Mango Coffee Matcha Latte','1','$8.99']]))}${panel('Total',`<div class="activity"><span>Subtotal</span><b style="margin-left:auto">$23.96</b></div><div class="activity"><span>Discount (10%)</span><b style="margin-left:auto">−$2.40</b></div><div class="activity"><span>Delivery</span><b style="margin-left:auto">$0.00</b></div><h2 style="display:flex;justify-content:space-between;margin-top:15px"><span>Total</span><span>$21.56</span></h2>`)}</div></div>`}
+function support(){return heading('Customer Support','We are here to help. Send us a message or follow an existing request.')+`<div class="support-layout"><div>${panel('Create a Support Ticket',`<div class="form-grid"><div class="field"><label>Topic</label><select><option>Order issue</option><option>Payment</option><option>Product information</option><option>Delivery</option><option>Other</option></select></div><div class="field"><label>Order reference (optional)</label><input placeholder="#NS-1048"></div><div class="field full"><label>Subject</label><input placeholder="Briefly describe your issue"></div><div class="field full"><label>Message</label><textarea placeholder="Tell us how we can help..."></textarea></div><div class="field full"><button class="btn" onclick="toast('Your demo support ticket has been submitted.')">Submit Ticket</button></div></div>`)}</div><div>${panel('My Tickets',`<div class="ticket"><div class="ticket-top"><b>#TK-023 · Delivery question</b>${status('In progress')}</div><p class="smalltext">Submitted 05 Nov 2026</p><p style="font-size:12px">I would like an update about my delivery.</p></div><div class="ticket"><div class="ticket-top"><b>#TK-019 · Product information</b>${status('Resolved')}</div><p class="smalltext">Submitted 29 Oct 2026</p><p style="font-size:12px">Question about allergens in a cookie.</p></div>`)}</div></div>`}
+function availability(){return heading('Availability','Control whether you can receive new assignments.')+`<div class="grid two-col"><div class="panel"><h2>Your current status</h2><div style="font:30px Georgia;color:var(--olive-dark);margin:18px 0">● Available</div><p class="muted" style="font-size:13px">You are currently eligible to receive new ${role==='worker'?'order preparation':'delivery'} assignments.</p><div class="toolbar"><button class="btn olive" onclick="setAvail('Available')">Available</button><button class="btn light" onclick="setAvail('Busy')">Busy</button><button class="btn rose" onclick="setAvail('Offline')">Offline</button></div><p id="availMsg" class="smalltext">Last updated just now.</p></div>${panel('Availability Guidelines',`<div class="activity"><span class="dot"></span><div><b>Available</b><p class="smalltext">You can receive new assignments.</p></div></div><div class="activity"><span class="dot" style="background:#d7a85e"></span><div><b>Busy</b><p class="smalltext">Temporarily pause new assignments.</p></div></div><div class="activity"><span class="dot" style="background:#b7aaa0"></span><div><b>Offline</b><p class="smalltext">You are not available for new work.</p></div></div>`)}</div>`}
+function setAvail(s){document.getElementById('availMsg').textContent='Status changed to '+s+' (demo).'}
+function listPage(title,sub,headers,rows,button=''){return heading(title,sub,button)+panel(title,`<div class="toolbar" style="margin-bottom:15px"><input class="search" placeholder="Search ${title.toLowerCase()}..." oninput="filterTable(this)"><select class="search"><option>All statuses</option><option>Pending</option><option>In progress</option><option>Completed</option></select></div><div id="filterTarget">${table(headers,rows)}</div>`)}
+function filterTable(el){let q=el.value.toLowerCase();document.querySelectorAll('#filterTarget tbody tr').forEach(tr=>tr.style.display=tr.innerText.toLowerCase().includes(q)?'':'none')}
+
+function acceptWorkerOrder(id){
+ const i=availableOrders.findIndex(o=>o.id===id); if(i<0)return;
+ const o=availableOrders.splice(i,1)[0];o.status='Preparing';workerOrders.unshift(o);
+ toast('Order '+id+' is now assigned to you.');render();
+}
+function acceptDelivery(id){
+ const i=availableDeliveries.findIndex(o=>o.id===id);if(i<0)return;
+ const o=availableDeliveries.splice(i,1)[0];o.status='Out for delivery';myDeliveries.unshift(o);
+ toast('Delivery '+id+' assigned to you.');render();
+}
+function updateWorkerOrder(id){
+ const o=workerOrders.find(x=>x.id===id);if(!o)return;
+ o.status='Ready for pickup';toast(id+' marked as prepared and ready for pickup.');render();
+}
+function updateDelivery(id){
+ const o=myDeliveries.find(x=>x.id===id);if(!o)return;
+ o.status='Delivered';toast(id+' marked as delivered.');render();
+}
+function changeUserRole(i,newRole){
+ userRoles[i].role=newRole;toast(userRoles[i].name+' role updated to '+newRole+'.');render();
+}
+function availableOrdersPage(){
+ const rows=availableOrders.map(o=>[o.id,o.client,o.items,o.received,status(o.status),`<button class="btn small" onclick="acceptWorkerOrder('${o.id}')">Accept order</button>`]);
+ return heading('Available Orders','Choose an order you are ready to prepare. Accepting it assigns it to your account.')+
+ (rows.length?panel('Orders waiting for a worker',table(['Order','Customer','Items','Received','Status','Action'],rows)) : panel('No available orders','There are currently no orders waiting for preparation.'));
+}
+function availableDeliveriesPage(){
+ const rows=availableDeliveries.map(o=>[o.id,o.client,o.address,o.ready,status(o.status),`<button class="btn small" onclick="acceptDelivery('${o.id}')">Accept delivery</button>`]);
+ return heading('Available Deliveries','Choose a prepared order you can deliver. Accepting it assigns the delivery to you.')+
+ (rows.length?panel('Orders ready for delivery',table(['Order','Recipient','Address','Ready at','Status','Action'],rows)):panel('No available deliveries','There are currently no prepared orders waiting for a deliverer.'));
+}
+function userRolesPage(){
+ const rows=userRoles.map((u,i)=>[u.name,u.email,`<select class="search" onchange="changeUserRole(${i},this.value)"><option ${u.role==='Client'?'selected':''}>Client</option><option ${u.role==='Worker'?'selected':''}>Worker</option><option ${u.role==='Deliverer'?'selected':''}>Deliverer</option><option ${u.role==='Admin'?'selected':''}>Admin</option></select>`,status(u.status)]);
+ return heading('Users & Permissions','Assign platform roles to registered users. A role determines which workspace and permissions the account receives.')+
+ panel('User role management',`<p class="smalltext">Use the role selector to grant or change a user's access. Only grant Worker or Deliverer access to trusted staff members.</p>${table(['User','Email','Assigned role','Account status'],rows)}`)+
+ panel('What each role can access',`<div class="grid three-col"><div><b>Client</b><p class="smalltext">Browse products, place orders and track purchases.</p></div><div><b>Worker</b><p class="smalltext">Accept available orders and prepare assigned orders.</p></div><div><b>Deliverer</b><p class="smalltext">Accept ready deliveries and update delivery progress.</p></div></div>`);
+}
+function orderStaffAttribution(orderId){
+  const prepared=staffState.workerHistory.find(x=>x.id===orderId);
+  const delivered=staffState.deliveryHistory.find(x=>x.id===orderId && x.outcome==='Delivered');
+  return {
+    worker: prepared?.worker || (prepared ? 'Nadia E.' : 'Not recorded'),
+    deliverer: delivered?.deliverer || (delivered ? 'Omar K.' : 'Not delivered')
+  };
+}
+function workerPage(){
+ if(page==='Dashboard')return dashboard('Worker');
+ if(page==='Available Orders')return availableOrdersPage();
+ if(page==='Assigned Orders')return listPage(page,'Orders you accepted and are responsible for preparing.',['Order','Customer','Items','Status','Action'],workerOrders.map(o=>[o.id,o.client,o.items,status(o.status),o.status==='Ready for pickup'?'<span class="smalltext">Completed</span>':`<button class="btn small" onclick="updateWorkerOrder('${o.id}')">Mark as prepared</button>`]));
+ if(page==='Order History')return listPage(page,'Completed and previously handled orders.',['Order','Customer','Items','Outcome','Date'],[['#NS-1038','Sara M.','2 items',status('Completed'),'04 Nov'],['#NS-1032','Aya N.','3 items',status('Completed'),'03 Nov'],['#NS-1028','Salma R.','1 item',status('Completed'),'02 Nov']]);
+ if(page==='Availability')return availability();return profile('Profile');
+}
+function delivererPage(){
+ if(page==='Dashboard')return dashboard('Deliverer');
+ if(page==='Available Deliveries')return availableDeliveriesPage();
+ if(page==='My Deliveries')return listPage(page,'Deliveries you accepted and are responsible for.',['Order','Recipient','Address','Status','Action'],myDeliveries.map(o=>[o.id,o.client,o.address,status(o.status),o.status==='Delivered'?'<span class="smalltext">Completed</span>':`<button class="btn small" onclick="updateDelivery('${o.id}')">Mark as delivered</button>`]));
+ if(page==='Delivery History')return listPage(page,'Your completed and unsuccessful delivery attempts.',['Order','Recipient','Address','Date','Outcome'],[['#NS-1039','Aya N.','Martil','04 Nov',status('Delivered')],['#NS-1035','Sara M.','Centre-ville','03 Nov',status('Delivered')],['#NS-1029','Meriem A.','Mhannech','02 Nov',status('Failed')]]);
+ if(page==='Availability')return availability();return profile('Profile');
+}
+function adminPage(){
+if(page==='Dashboard')return dashboard('Admin');
+const data={
+'Users':['Registered client accounts.',['Client','Email','Orders','Joined','Status'],[['Meriem A.','meriem@email.com','12','12 Oct',status('Active')],['Yasmine B.','yasmine@email.com','8','18 Oct',status('Active')],['Sara M.','sara@email.com','4','21 Oct',status('Active')],['Aya N.','aya@email.com','2','02 Nov',status('Active')]]],
+'Employees':['Manage workers and deliverers.',['Name','Role','Email','Availability','Status'],[['Nadia E.','Worker','nadia@nostimo.bake',status('Available'),status('Active')],['Imane R.','Worker','imane@nostimo.bake',status('Busy'),status('Active')],['Omar K.','Deliverer','omar@nostimo.bake',status('Available'),status('Active')]]],
+'Products':['Manage the products displayed in the client catalogue.',['Product','Category','Price','Stock','Status'],[['Red Velvet Cookie','Cookies','$4.99','24',status('Active')],['Golden Brownie','Brownies','$6.99','18',status('Active')],['Matcha Latte','Drinks','$5.99','12',status('Active')],['Lotus Cookie','Cookies','$4.99','0',status('Out of stock')]]],
+'Categories':['Organise products into catalogue categories.',['Category','Products','Description','Status'],[['Cookies','8','Freshly baked cookies',status('Active')],['Brownies','5','Rich chocolate brownies',status('Active')],['Drinks','11','Coffee and matcha drinks',status('Active')]]],
+'Weekly Specials':['Choose featured products and define their promotion period.',['Special','Price','Start date','End date','Status'],[['Tiramisu Cookie','$5.49','01 Nov','07 Nov',status('Active')],['Matcha Box','$18.00','08 Nov','14 Nov',status('Scheduled')]]],
+'Orders':['Monitor all client orders and their progress, including who prepared and delivered each order.',['Order','Client','Items','Prepared by (Worker)','Delivered by (Deliverer)','Total','Status','Date'],orders.map(o=>{const a=orderStaffAttribution(o[0]);return [o[0],o[1],o[2],a.worker,a.deliverer,o[3],status(o[4]),o[5]]})],
+'Assignments':['Monitor order preparation and delivery assignments.',['Order','Worker','Deliverer','Assigned at','Status'],[['#NS-1048','Nadia E.','Omar K.','10:40',status('In progress')],['#NS-1047','Imane R.','—','10:15',status('Preparing')],['#NS-1046','Nadia E.','Omar K.','Yesterday',status('Completed')]]],
+'Deliveries':['Monitor delivery progress and outcomes.',['Order','Deliverer','Destination','Updated','Status'],[['#NS-1048','Omar K.','Centre-ville','10:45',status('Out for delivery')],['#NS-1042','Omar K.','Mhannech','11:20',status('Assigned')],['#NS-1039','Imane R.','Martil','Yesterday',status('Delivered')]]],
+'Payments':['Review payment records and collection status.',['Payment','Order','Method','Amount','Status','Date'],[['#PAY-2048','#NS-1048','Card','$28.45',status('Paid'),'Today'],['#PAY-2047','#NS-1047','Cash on delivery','$13.98',status('Pending'),'Today'],['#PAY-2046','#NS-1046','Card','$19.50',status('Paid'),'Yesterday']]],
+'Support':['Review and respond to client support requests.',['Ticket','Client','Topic','Created','Status'],[['#TK-023','Meriem A.','Delivery question','05 Nov',status('In progress')],['#TK-022','Yasmine B.','Payment','04 Nov',status('Pending')],['#TK-019','Sara M.','Product information','29 Oct',status('Resolved')]]]
+};
+if(page==='Users')return userRolesPage();
+if(data[page]){let d=data[page];return listPage(page,d[0],d[1],d[2],`<button class="btn" onclick="toast('Demo: ${page} form opened.')">+ Add ${page==='Users'?'User':page==='Employees'?'Employee':page==='Products'?'Product':page==='Categories'?'Category':page==='Orders'?'Order':page==='Weekly Specials'?'Special':page==='Support'?'Ticket':page.slice(0,-1)}</button>`)}
+if(page==='Analytics')return heading('Analytics','Understand sales, customer activity and product performance.')+stats([['Revenue','$4,820','This month','＄'],['Orders','248','This month','▤'],['Average order','$19.44','Per order','◷'],['Returning clients','62%','Customer retention','♙']])+`<div class="grid two-col">${panel('Monthly Revenue',`<div style="height:190px;display:flex;align-items:end;gap:13px;padding:10px 5px 25px;border-bottom:1px solid var(--line)">${[45,62,54,78,67,90,73,100,82,94,70,88].map((v,i)=>`<div style="flex:1;text-align:center"><div style="height:${v*1.45}px;background:var(--olive);border-radius:5px 5px 0 0"></div><div class="smalltext">${['J','F','M','A','M','J','J','A','S','O','N','D'][i]}</div></div>`).join('')}</div>`)}${panel('Top Products',`<p class="smalltext">Share of product sales</p>${[['Red Velvet Cookie','82%'],['Golden Brownie','68%'],['Matcha Latte','54%'],['Lotus Cookie','43%']].map(x=>`<p style="font-size:12px;display:flex;justify-content:space-between"><b>${x[0]}</b><span>${x[1]}</span></p><div class="bar"><span style="width:${x[1]}"></span></div>`).join('')}`)}</div>`;
+if(page==='Settings')return heading('Settings','Configure platform preferences and operational rules.')+`<div class="grid two-col">${panel('General Settings',`<div class="form-grid"><div class="field full"><label>Store name</label><input value="Nóstimo"></div><div class="field"><label>Contact email</label><input value="nostimo.bake@gmail.com"></div><div class="field"><label>Phone</label><input value="+212 600 000000"></div><div class="field"><label>Currency</label><select><option>USD — US Dollar</option><option>MAD — Moroccan Dirham</option></select></div><div class="field"><label>Timezone</label><select><option>Africa/Casablanca</option></select></div><div class="field full"><button class="btn" onclick="toast('Settings saved in this demo.')">Save Settings</button></div></div>`)}${panel('Order Rules',`<div class="field"><label>Default order status</label><select><option>Pending</option><option>Confirmed</option></select></div><div class="field" style="margin-top:14px"><label>Cancellation allowed before</label><select><option>Worker assignment</option><option>Preparation starts</option></select></div><div class="field" style="margin-top:14px"><label>Default delivery fee</label><input value="$0.00"></div>`)}</div>`;
+return profile('Admin Profile');
+}
+
+function clientHome(){
+ return heading('Welcome to Nóstimo','Freshly baked cookies, brownies and comforting matcha moments.',`<button class="btn" onclick="go('Products')">Explore Menu</button>`)
+ + `<div class="panel" style="background:linear-gradient(110deg,#4b3326dd,#4b332688),linear-gradient(120deg,#d8c3a7,#7e8d63);color:white;padding:38px 30px">
+ <span class="tag" style="background:#ffffff25;color:white">BAKED WITH LOVE</span><h2 style="font:34px Georgia;color:white;margin:12px 0">A little comfort in every bite.</h2><p style="max-width:520px;line-height:1.7;font-size:13px;color:#f8eee4">Discover our cookies, brownies and signature matcha drinks. Made with care, served fresh.</p><button class="btn olive" onclick="go('Products')">Order now</button></div>
+ <div class="panel"><div class="panel-head"><h2>Customer favourites</h2><button class="btn light small" onclick="go('Products')">View menu</button></div><div class="grid three-col">${[['🍵','Matcha & White Chocolate Cookie','$4.99'],['🍪','Red Velvet Cookie','$4.99'],['🍫','Golden Brownie','$6.99']].map(x=>`<div class="quick-link" style="text-align:center"><div style="font-size:54px">${x[0]}</div><b>${x[1]}</b><p class="price" style="font-size:18px">${x[2]}</p><button class="btn small" onclick="toast('${x[1]} added to cart.')">Add to cart</button></div>`).join('')}</div></div>
+ <div class="grid two-col">${panel('Weekly Special',`<div class="product-row"><div class="product-img" style="width:90px;height:90px;font-size:48px">🍥</div><div><b>Tiramisu Cookie</b><p class="smalltext">Espresso notes, cocoa and a soft centre.</p><b>$5.49</b></div></div><button class="btn small" style="margin-top:15px" onclick="go('Product Details')">Discover the special</button>`)}${panel('Your Nóstimo account',`<p class="muted" style="font-size:12px">Sign in to follow your orders, save favourites and manage your delivery addresses.</p><button class="btn" onclick="go('Login')">Sign in</button> <button class="btn light" onclick="go('Register')">Create account</button>`)}</div>
+ <div class="panel"><div class="panel-head"><h2>What our customers say</h2><span class="tag">Store reviews</span></div>
+ <div class="grid two-col">${storeReviews.slice(0,4).map(r=>`<div class="quick-link"><div style="color:#c49a53;letter-spacing:2px">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div><p style="font-size:13px;line-height:1.6">“${r.text}”</p><b>${r.name}</b><div class="smalltext">${r.date}</div></div>`).join('')}</div>
+ <p class="smalltext" style="margin-top:12px">Only customers with a delivered order can submit a store review.</p></div>`;
+}
+function clientProducts(){
+ const items=[['🍪','Classic Chocolate Chip Cookie','$4.99','Cookies'],['🥜','Almond Cookie','$4.99','Cookies'],['🍵','Matcha & White Chocolate Cookie','$4.99','Cookies'],['❤️','Red Velvet Cookie','$4.99','Cookies'],['🍯','Lotus Cookie','$4.99','Cookies'],['🍫','Classic Fudgy Brownie','$6.99','Brownies'],['🧈','Golden Brownie','$6.99','Brownies'],['🌰','Hazelnut Brownie','$6.99','Brownies'],['🍓','Strawberry Matcha Latte','$5.99','Drinks'],['🍵','Matcha Latte','$5.99','Drinks'],['🥭','Mango Coffee Matcha Latte','$5.99','Drinks'],['☕','Coffee Matcha Latte','$5.99','Drinks']];
+ return heading('Menu','Explore our freshly prepared cookies, brownies and drinks.',`<button class="btn olive" onclick="go('My Cart')">View cart</button>`)
+ + ['Cookies','Brownies','Drinks'].map(cat=>`<div class="panel"><h2>${cat}</h2><div class="grid three-col">${items.filter(x=>x[3]===cat).map(x=>`<div class="quick-link" style="text-align:center"><div style="font-size:58px">${x[0]}</div><b>${x[1]}</b><p class="price" style="font-size:18px">${x[2]}</p><div class="toolbar" style="justify-content:center"><button class="btn small" onclick="toast('${x[1]} added to cart.')">Add to cart</button><button class="btn light small" onclick="go('Product Details')">Details</button></div></div>`).join('')}</div></div>`).join('');
+}
+function clientCart(){
+ return heading('My Cart','Review your selection before checkout.')
+ + `<div class="grid two-col"><div>${panel('Cart items',table(['Product','Quantity','Price',''],[['🍪 Red Velvet Cookie','− 1 +','$4.99','<button class="btn rose small" onclick="toast(\'Item removed in demo.\')">Remove</button>'],['🍵 Matcha & White Chocolate Cookie','− 1 +','$4.99','<button class="btn rose small" onclick="toast(\'Item removed in demo.\')">Remove</button>'],['🧈 Golden Brownie','− 1 +','$6.99','<button class="btn rose small" onclick="toast(\'Item removed in demo.\')">Remove</button>'],['🥭 Mango Coffee Matcha Latte','− 1 +','$5.99','<button class="btn rose small" onclick="toast(\'Item removed in demo.\')">Remove</button>']]))}</div>${panel('Order Summary',`<div class="activity"><span>Subtotal</span><b style="margin-left:auto">$22.96</b></div><div class="activity"><span>Discount (10%)</span><b style="margin-left:auto">−$2.30</b></div><div class="activity"><span>Delivery fee</span><b style="margin-left:auto">$0.00</b></div><h2 style="display:flex;justify-content:space-between;margin:16px 0"><span>Total</span><span>$20.66</span></h2><button class="btn olive" style="width:100%" onclick="go('Checkout')">Checkout now</button>`)}</div>`;
+}
+function clientCheckout(){
+ return heading('Checkout','Confirm your delivery information and payment method.')
+ + `<div class="grid two-col"><div>${panel('Delivery Information',`<div class="form-grid"><div class="field full"><label>Full name *</label><input value="Zainab Oulad Dahman"></div><div class="field"><label>Phone number *</label><input value="+212 6XX XXX XXX"></div><div class="field"><label>City *</label><input value="Tétouan"></div><div class="field full"><label>Delivery address *</label><textarea placeholder="Street, building, floor, neighbourhood"></textarea></div><div class="field full"><label>Order notes</label><textarea placeholder="Optional delivery instructions"></textarea></div></div>`)}
+ ${panel('Payment Method',`<label class="quick-link" style="display:block;margin-bottom:10px"><input type="radio" name="payment" checked> &nbsp; Cash on delivery</label><label class="quick-link" style="display:block"><input type="radio" name="payment"> &nbsp; Credit / debit card</label><p class="smalltext">Choose card to continue to the secure card details screen.</p><button class="btn olive" onclick="go('Card Payment')">Continue to card payment</button> <button class="btn" onclick="toast('Demo order placed successfully.')">Place order (cash)</button>`)}</div>
+ ${panel('Order Summary',`<div class="activity"><span>4 items</span><b style="margin-left:auto">$22.96</b></div><div class="activity"><span>Discount</span><b style="margin-left:auto">−$2.30</b></div><div class="activity"><span>Delivery</span><b style="margin-left:auto">Free</b></div><h2 style="display:flex;justify-content:space-between"><span>Total</span><span>$20.66</span></h2>`)}</div>`;
+}
+function clientOrders(){
+ return listPage('My Orders','View your current and previous purchases.',['Order','Date','Items','Total','Status','Action'],[['#NS-1048','06 Nov 2026','4 items','$20.66',status('Preparing'),'<button class="btn light small" onclick="go(\'Order Details\')">View</button>'],['#NS-1039','04 Nov 2026','2 items','$13.98',status('Delivered'),'<button class="btn light small" onclick="go(\'Order Details\')">View</button>'],['#NS-1024','29 Oct 2026','3 items','$18.50',status('Delivered'),'<button class="btn light small" onclick="go(\'Order Details\')">View</button>']]);
+}
+function clientOrderDetails(){
+ return heading('Order Details','Order #NS-1048 · Placed on 06 November 2026.')
+ + `<div class="grid two-col">${panel('Items in your order',table(['Product','Quantity','Price'],[['Red Velvet Cookie','1','$4.99'],['Matcha & White Chocolate Cookie','1','$4.99'],['Golden Brownie','1','$6.99'],['Mango Coffee Matcha Latte','1','$5.99']]))}${panel('Order information',`<p><b>Order status</b> ${status('Preparing')}</p><p class="smalltext">Payment method: Cash on delivery</p><p class="smalltext">Delivery address: Tétouan, Morocco</p><p class="smalltext">Estimated delivery: To be confirmed</p><button class="btn olive" onclick="go('Track Delivery')">Track order</button><button class="btn light" style="margin-left:8px" onclick="toast('Cancellation is unavailable after preparation assignment.')">Cancel order</button>`)}</div>`;
+}
+
+function canReviewProduct(product){
+ return deliveredProducts.some(x=>x.product===product && x.delivered) && !submittedProductReviews.includes(product);
+}
+function clientReviews(){
+ const eligible=deliveredProducts.filter(x=>x.delivered);
+ const products=[...new Set(eligible.map(x=>x.product))];
+ return heading('My Reviews','Share feedback after your order has been delivered.')
+ + `<div class="grid two-col">
+ ${panel('Review the Nóstimo store',`<p class="smalltext">Your store review may appear on the Nóstimo homepage and helps other customers discover the bakery.</p>
+ ${submittedStoreReview?`<span class="status">Your store review has been submitted</span>`:(!deliveredProducts.some(x=>x.delivered)?`<p class="smalltext">You can submit a store review after your first order has been delivered.</p>`:`<div class="field"><label>Your rating</label><select id="storeRating"><option value="5">★★★★★ · Excellent</option><option value="4">★★★★☆ · Very good</option><option value="3">★★★☆☆ · Good</option><option value="2">★★☆☆☆ · Fair</option><option value="1">★☆☆☆☆ · Poor</option></select></div><div class="field" style="margin-top:10px"><label>Your review</label><textarea id="storeReviewText" placeholder="Tell us about your overall experience with Nóstimo..."></textarea></div><button class="btn" style="margin-top:12px" onclick="submitStoreReview()">Submit store review</button>`) }`)}
+ ${panel('Products you can review',products.length?products.map(product=>`<div class="activity"><div style="flex:1"><b>${product}</b><div class="smalltext">Purchased in a delivered order</div></div>${submittedProductReviews.includes(product)?`<span class="status">Reviewed</span>`:`<button class="btn light small" onclick="go('Product Details')">Review product</button>`}</div>`).join(''):`<p class="smalltext">You can review products here once an order containing them has been delivered.</p>`)}
+ </div>
+ ${panel('Your store review history',storeReviews.length?storeReviews.map(r=>`<div class="activity"><div style="flex:1"><div style="color:#c49a53">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div><p>${r.text}</p><b>${r.name}</b></div></div>`).join(''):`<p class="smalltext">No store reviews yet.</p>`)}
+ <p class="smalltext">Demo note: review submissions are held in this page's memory only. A real website needs database storage and server-side checks that the customer actually received the order.</p>`;
+}
+function submitStoreReview(){
+ const text=document.getElementById('storeReviewText')?.value.trim();
+ const rating=Number(document.getElementById('storeRating')?.value||5);
+ if(!text){toast('Please write a review before submitting.');return}
+ storeReviews.unshift({name:'You',rating,text,date:'Just now'});
+ submittedStoreReview=true;
+ render();
+ toast('Thank you! Your store review has been submitted.');
+}
+function submitProductReview(product){
+ const text=document.getElementById('productReviewText')?.value.trim();
+ const rating=Number(document.getElementById('productRating')?.value||5);
+ if(!text){toast('Please write a review before submitting.');return}
+ if(!productReviews[product])productReviews[product]=[];
+ productReviews[product].unshift({name:'You',rating,text});
+ submittedProductReviews.push(product);
+ render();
+ toast('Thank you! Your product review has been submitted.');
+}
+function clientTrack(){
+ return heading('Track Delivery','Follow the progress of your order.')
+ + panel('Delivery progress',`<div class="activity"><span class="dot"></span><div><b>Order confirmed</b><p class="smalltext">Your order has been received.</p></div><span class="status">Done</span></div><div class="activity"><span class="dot"></span><div><b>Preparing your order</b><p class="smalltext">Our team is preparing your items.</p></div><span class="status progress">In progress</span></div><div class="activity"><span class="dot" style="background:#ddd"></span><div><b>Out for delivery</b><p class="smalltext">Your deliverer will be assigned when ready.</p></div></div><div class="activity"><span class="dot" style="background:#ddd"></span><div><b>Delivered</b><p class="smalltext">Enjoy your Nóstimo order.</p></div></div>`);
+}
+function clientAddresses(){
+ return heading('My Addresses','Manage the places where you would like to receive your orders.',`<button class="btn" onclick="toast('Address form opened in this demo.')">+ Add address</button>`)
+ + `<div class="grid two-col">${panel('Home address',`<span class="tag">Default</span><h3>Tétouan · Home</h3><p class="muted" style="font-size:12px">Street and neighbourhood details can be added here.</p><button class="btn light small" onclick="toast('Edit address form opened.')">Edit</button> <button class="btn rose small" onclick="toast('Address removal requires confirmation.')">Delete</button>`)}${panel('Add a new address',`<div class="field"><label>Address label</label><input placeholder="Home, work..."></div><div class="field" style="margin-top:12px"><label>Full address</label><textarea placeholder="Street, building, neighbourhood, city"></textarea></div><button class="btn" style="margin-top:12px" onclick="toast('Address saved in this demo.')">Save address</button>`)}</div>`;
+}
+function clientAuth(title){
+ const register=title==='Register',forgot=title==='Forgot Password',reset=title==='Reset Password';
+ return `<div style="max-width:560px;margin:25px auto">${heading(title,register?'Create your Nóstimo account.':forgot?'We will send you a link to reset your password.':reset?'Choose a new password for your account.':'Welcome back. Sign in to continue.')}${panel(register?'Create account':forgot?'Password recovery':reset?'Set new password':'Sign in',`<div class="form-grid">${register?`<div class="field full"><label>Full name</label><input placeholder="Your full name"></div>`:''}<div class="field full"><label>Email address</label><input type="email" placeholder="name@example.com"></div>${!forgot?`<div class="field full"><label>${reset?'New password':'Password'}</label><input type="password" placeholder="Enter your password"></div>`:''}${register?`<div class="field full"><label>Phone number</label><input placeholder="+212 ..."></div><div class="field full"><label>Confirm password</label><input type="password" placeholder="Confirm password"></div>`:''}<div class="field full"><button class="btn olive" style="width:100%" onclick="toast('${forgot?'Password reset link sent (demo).':reset?'Password updated (demo).':register?'Account created (demo).':'Login is a visual demo; authentication is not connected.'}')">${forgot?'Send reset link':reset?'Update password':register?'Create account':'Sign in'}</button></div></div><p class="smalltext" style="text-align:center;margin-top:15px">${!register&&!forgot&&!reset?`<a href="#" onclick="go('Forgot Password')">Forgot password?</a> · `:''}${register?'Already registered?': 'New to Nóstimo?'} <a href="#" onclick="go('${register?'Login':'Register'}')">${register?'Sign in':'Create an account'}</a></p>`)}</div>`;
+}
+function clientPage(){
+ switch(page){
+ case 'Home':return clientHome();
+ case 'Products':return clientProducts();
+ case 'Product Details':return productDetails();
+ case 'Favorites':return heading('My Favorites','Products you have saved for later.')+`<div class="grid three-col">${[['🍯','Lotus Cookie','$4.99'],['❤️','Red Velvet Cookie','$4.99']].map(x=>`<div class="quick-link" style="text-align:center"><div style="font-size:58px">${x[0]}</div><b>${x[1]}</b><p class="price">${x[2]}</p><button class="btn small" onclick="toast('Added to cart.')">Add to cart</button> <button class="btn rose small" onclick="toast('Removed from favourites.')">Remove</button></div>`).join('')}</div>`;
+ case 'My Cart':return clientCart();
+ case 'Checkout':return clientCheckout();
+ case 'Card Payment':return cardPayment();
+ case 'My Orders':return clientOrders();
+ case 'Reviews':return clientReviews();
+ case 'Order Details':return clientOrderDetails();
+ case 'Track Delivery':return clientTrack();
+ case 'My Addresses':return clientAddresses();
+ case 'Customer Support':return support();
+ case 'My Profile':return heading('My Profile','Manage your account information and view your favourite items.')+`<div class="grid two-col"><div class="profile-card"><div class="profile-circle">ZO</div><h2 style="font:22px Georgia;margin:0 0 6px">Zainab Oulad Dahman</h2><p style="font-size:12px;opacity:.85">client@example.com</p><span class="tag" style="background:#ffffff25;color:white">Client account</span></div>${panel('Personal Information',`<div class="form-grid"><div class="field"><label>Full name</label><input value="Zainab Oulad Dahman"></div><div class="field"><label>Email address</label><input value="client@example.com"></div><div class="field"><label>Phone number</label><input placeholder="+212 ..."></div><div class="field"><label>Address</label><input placeholder="Add your address"></div><div class="field full"><button class="btn" onclick="toast('Profile changes saved in this demo.')">Save Changes</button></div></div>`)}${panel('Account shortcuts',`<button class="btn light" onclick="go('My Orders')">My orders</button> <button class="btn light" onclick="go('My Addresses')">My addresses</button>`)}</div>`;
+ case 'Login':case 'Register':case 'Forgot Password':case 'Reset Password':return clientAuth(page);
+ default:return clientHome();
+ }
+}
+
+function render(){nav();let content=role==='client'?clientPage():role==='worker'?workerPage():role==='deliverer'?delivererPage():adminPage();document.getElementById('main').innerHTML=content+`<div class="footer-note">Nóstimo · Interface concept · Sample information only</div>`}
+function qty(n){let el=document.getElementById('qty');el.textContent=Math.max(1,Math.min(20,Number(el.textContent)+n))}
+function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.style='position:fixed;bottom:22px;right:22px;background:#4b3326;color:white;padding:14px 18px;border-radius:9px;z-index:20;box-shadow:0 5px 20px #0002;font-size:12px';document.body.appendChild(t)}t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2600)}
+
+/* ================= NÓSTIMO ENHANCEMENTS =================
+   Prototype-only state: data resets when the page is refreshed.
+*/
+const staffState = {
+  workerAvailability: 'Available',
+  delivererAvailability: 'Available',
+  workerHistory: [
+    {id:'#NS-1038',client:'Sara M.',items:'2 items',date:'04 Nov 2026',outcome:'Prepared',worker:'Nadia E.',deliverer:'Omar K.'},
+    {id:'#NS-1032',client:'Aya N.',items:'3 items',date:'03 Nov 2026',outcome:'Prepared',worker:'Imane R.',deliverer:'Omar K.'},
+    {id:'#NS-1028',client:'Salma R.',items:'1 item',date:'02 Nov 2026',outcome:'Prepared'}
+  ],
+  deliveryHistory: [
+    {id:'#NS-1039',client:'Aya N.',address:'Martil',date:'04 Nov 2026',outcome:'Delivered',paymentMethod:'Cash on delivery',paymentStatus:'Paid'},
+    {id:'#NS-1035',client:'Sara M.',address:'Centre-ville',date:'03 Nov 2026',outcome:'Delivered',paymentMethod:'Card',paymentStatus:'Paid'},
+    {id:'#NS-1029',client:'Meriem A.',address:'Mhannech',date:'02 Nov 2026',outcome:'Failed',paymentMethod:'Cash on delivery',paymentStatus:'Unpaid'}
+  ],
+  tickets: [
+    {id:'#TK-W01',role:'Worker',subject:'Oven temperature issue',message:'The oven temperature seems inconsistent.',status:'In progress',date:'Today'},
+    {id:'#TK-D01',role:'Deliverer',subject:'Delivery address clarification',message:'Need help confirming a customer address.',status:'Pending',date:'Today'}
+  ],
+  products: [
+    {name:'Red Velvet Cookie',category:'Cookies',price:4.99,stock:24,description:'A soft red velvet cookie with white chocolate.',image:'',weekly:false},
+    {name:'Golden Brownie',category:'Brownies',price:6.99,stock:18,description:'Rich chocolate brownie.',image:'',weekly:false},
+    {name:'Matcha Latte',category:'Drinks',price:5.99,stock:12,description:'Creamy matcha latte.',image:'',weekly:false},
+    {name:'Lotus Cookie',category:'Cookies',price:4.99,stock:0,description:'Lotus cookie.',image:'',weekly:false}
+  ],
+  specials: [
+    {name:'Tiramisu Cookie',price:5.49,start:'2026-11-01',end:'2026-11-07',description:'Espresso notes, cocoa and a soft centre.'}
+  ],
+  payments: [
+    {id:'#PAY-2048',order:'#NS-1048',method:'Cash on delivery',amount:28.45,status:'Unpaid',collector:'Omar K.',date:'Today'},
+    {id:'#PAY-2047',order:'#NS-1047',method:'Cash on delivery',amount:13.98,status:'Unpaid',collector:'—',date:'Today'},
+    {id:'#PAY-2046',order:'#NS-1046',method:'Card',amount:19.50,status:'Paid',collector:'Online',date:'Yesterday'}
+  ]
+};
+let productImageDraft = '';
+let activeDateFilter = 'Today';
+let comparePrevious = false;
+
+menus.worker.push(['Support','♡']);
+menus.deliverer.push(['Support','♡']);
+
+function availabilitySelect(which){
+  const key=which==='Worker'?'workerAvailability':'delivererAvailability';
+  const current=staffState[key];
+  return `<div class="field"><label>Your availability for new assignments</label><select onchange="setStaffAvailability('${which}',this.value)">
+    <option ${current==='Available'?'selected':''}>Available</option>
+    <option ${current==='Busy'?'selected':''}>Busy</option>
+    <option ${current==='Offline'?'selected':''}>Offline</option>
+  </select><span class="smalltext">Changes are visible immediately on the admin dashboard.</span></div>`;
+}
+function setStaffAvailability(which,value){
+  staffState[which==='Worker'?'workerAvailability':'delivererAvailability']=value;
+  toast(which+' availability updated to '+value+'.');
+  render();
+}
+function globalFilters(){
+  return `<div class="toolbar" style="justify-content:flex-end;margin:-5px 0 18px">
+    <select class="search" aria-label="Date filter" onchange="activeDateFilter=this.value;toast('Date range: '+this.value)">
+      ${['Today','Yesterday','Last 7 days','Last 30 days','This month','Custom range'].map(x=>`<option ${activeDateFilter===x?'selected':''}>${x}</option>`).join('')}
+    </select>
+    <select class="search" aria-label="Time of day"><option>All day</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+    <label class="smalltext" style="display:flex;align-items:center;gap:6px"><input type="checkbox" ${comparePrevious?'checked':''} onchange="comparePrevious=this.checked;toast('Period comparison '+(this.checked?'enabled':'disabled'))"> Compare previous period</label>
+    <button class="btn light small" onclick="exportCurrentCSV()">Export CSV</button>
+    <span class="smalltext">Updated just now · <button class="btn light small" onclick="render()">↻ Refresh</button></span>
+  </div>`;
+}
+function exportCurrentCSV(){
+  const rows=[['Reference','Customer','Items','Total','Status','Date'],...orders.map(o=>o)];
+  const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='nostimo-report.csv';a.click();URL.revokeObjectURL(url);
+  toast('CSV report exported.');
+}
+function staffAvailabilityPanel(){
+  const workers=[['Nadia E.','Worker',staffState.workerAvailability],['Imane R.','Worker','Busy'],['Omar K.','Deliverer',staffState.delivererAvailability]];
+  return panel('Team availability',`<p class="smalltext">Workers and deliverers can update their status from their own dashboard. Admin can view the live status here.</p>${table(['Team member','Role','Availability'],workers.map(x=>[x[0],x[1],status(x[2])]))}`);
+}
+function dashboard(kind){
+  if(kind==='Admin'){
+    const unpaid=staffState.payments.filter(p=>p.status!=='Paid').length;
+    return heading('Admin Dashboard','Live operations — monitor today’s orders, team and deliveries.')+globalFilters()
+      +stats([['Orders today','18','4 pending','▤'],['Revenue today','$486.20','Collected / recorded today','＄'],['Customers today','12','8 new · 4 returning','♙'],['Active workers','2 / 3','On shift now','♧'],['Active deliveries','3','2 drivers available','➜'],['Cancelled / refunded','1','Today','↶'],['Low-stock alerts','2','Items need attention','⚑']])
+      +`<div class="panel"><div class="panel-head"><h2>Orders by status</h2><button class="btn light small" onclick="go('Orders')">View orders</button></div><div class="grid three-col">${[['New','4'],['Preparing','5'],['Ready','3'],['Out for delivery','3'],['Delivered','2'],['Cancelled','1']].map(x=>`<div class="quick-link"><div class="smalltext">${x[0]}</div><div class="stat-value" style="margin:5px 0">${x[1]}</div></div>`).join('')}</div></div>
+      <div class="grid two-col">${panel('Recent orders',table(['Order','Customer','Amount','Payment','Type','Status'],[['#NS-1050','Salma R.','$18.50','Unpaid · cash','Delivery',status('New')],['#NS-1049','Aya N.','$12.00','Paid · card','Pickup',status('Preparing')],['#NS-1048','Meriem A.','$28.45','Unpaid · cash','Delivery',status('Preparing')],['#NS-1047','Yasmine B.','$13.98','Unpaid · cash','Delivery',status('Ready')]]),'<button class="btn light small" onclick="go(\'Orders\')">View all</button>')}${panel('Active deliveries',table(['Driver','Destination','ETA','Status'],[['Omar K.','Centre-ville','12 min',status('Out for delivery')],['Omar K.','Mhannech','20 min',status('Assigned')],['Nadia E.','Martil','35 min',status('Out for delivery')]]))}</div>
+      <div class="grid two-col">${staffAvailabilityPanel()}${panel('Workers on shift',table(['Name','Role','Status','Orders handled'],[['Nadia E.','Baker',status(staffState.workerAvailability),'8'],['Imane R.','Cashier',status('Busy'),'6'],['Omar K.','Driver',status(staffState.delivererAvailability),'5']]))}</div>
+      <div class="grid two-col">${panel('Stock alerts',table(['Product','Stock','Alert'],[['Lotus Cookie','0',status('Out of stock')],['Matcha Latte','3',status('Low stock')]]))}${panel('Today’s top sellers',table(['Product','Units sold','Revenue'],[['Red Velvet Cookie','24','$119.76'],['Golden Brownie','17','$118.83'],['Matcha Latte','12','$71.88']]))}</div>
+      <div class="grid two-col">${panel('Recent activity',activities(['New order received — #NS-1050','Payment still unpaid — #NS-1048','Lotus Cookie is out of stock','Omar K. updated delivery #NS-1039']))}${panel('Quick actions',`<div class="toolbar"><button class="btn" onclick="go('Add Product')">＋ Add product</button><button class="btn olive" onclick="go('Weekly Special Form')">＋ Add weekly special</button><button class="btn light" onclick="go('Employees')">Manage workers</button></div>`)}</div>`;
+  }
+  const worker=kind==='Worker';
+  const statusValue=staffState[worker?'workerAvailability':'delivererAvailability'];
+  const base=worker?[['Assigned today',String(workerOrders.length),'Orders assigned to you','▤'],['In preparation',String(workerOrders.filter(o=>o.status==='Preparing').length),'Currently preparing','◷'],['Prepared today',String(staffState.workerHistory.length+workerOrders.filter(o=>o.status==='Ready for pickup').length),'Completed preparation','✓'],['Availability',statusValue,'Choose your status below','◉']]:[['Assigned deliveries',String(myDeliveries.length),'Assigned to you','➜'],['To pick up',String(myDeliveries.filter(o=>o.status!=='Out for delivery'&&o.status!=='Delivered').length),'At the bakery','▣'],['In transit',String(myDeliveries.filter(o=>o.status==='Out for delivery').length),'On the way','⌖'],['Completed today',String(staffState.deliveryHistory.length+myDeliveries.filter(o=>o.status==='Delivered').length),'Delivered orders','✓']];
+  const recent=worker?workerOrders.slice(0,5).map(o=>[o.id,o.client,o.items,status(o.status)]):myDeliveries.slice(0,5).map(o=>[o.id,o.client,o.address,status(o.status),o.paymentStatus||'Unpaid']);
+  return heading(kind+' Dashboard',`Welcome back. Manage your ${worker?'preparation work':'deliveries'} and availability here.`)+stats(base)
+    +`<div class="grid two-col"><div>${panel('My availability',availabilitySelect(kind)+`<p class="smalltext">Current status: <b>${statusValue}</b></p>`)}${panel(worker?'Orders assigned to me':'Deliveries assigned to me',table(worker?['Order','Customer','Items','Status']:['Order','Customer','Destination','Status','Payment'],recent),`<button class="btn light small" onclick="go('${worker?'Assigned Orders':'My Deliveries'}')">View all</button>`)}</div>${panel('Recent activity',activities(worker?['Order #NS-1047 marked ready','New order assigned to you','Availability updated']:['Delivery assignment received','Cash collection is recorded after customer handover','Delivery status updated']))}</div>`;
+}
+function workerSupportPage(){
+  const mine=staffState.tickets.filter(t=>t.role==='Worker');
+  return heading('Worker Support','Contact the admin about preparation, equipment, scheduling or order issues.')+
+    `<div class="support-layout"><div>${panel('Create a support request',`<div class="form-grid"><div class="field"><label>Topic</label><select id="staffTicketTopic"><option>Order preparation</option><option>Equipment / oven</option><option>Schedule / shift</option><option>Ingredients / stock</option><option>Other</option></select></div><div class="field"><label>Order reference (optional)</label><input id="staffTicketOrder" placeholder="#NS-1048"></div><div class="field full"><label>Subject</label><input id="staffTicketSubject" placeholder="What do you need help with?"></div><div class="field full"><label>Message</label><textarea id="staffTicketMessage" placeholder="Describe the issue..."></textarea></div><div class="field full"><button class="btn" onclick="submitStaffTicket('Worker')">Send to admin</button></div></div>`)}</div>${panel('My support requests',mine.length?mine.map(t=>`<div class="ticket"><div class="ticket-top"><b>${t.id} · ${t.subject}</b>${status(t.status)}</div><p class="smalltext">${t.date}</p><p style="font-size:12px">${t.message}</p></div>`).join(''):'<p class="smalltext">No worker support requests yet.</p>')}</div>`;
+}
+function delivererSupportPage(){
+  const mine=staffState.tickets.filter(t=>t.role==='Deliverer');
+  return heading('Delivery Support','Get help with routes, customer addresses, handovers, or cash collection.')+
+    `<div class="support-layout"><div>${panel('Create a delivery support request',`<div class="form-grid"><div class="field"><label>Topic</label><select id="staffTicketTopic"><option>Customer address</option><option>Delivery delay / route</option><option>Cash collection / payment</option><option>Vehicle / equipment</option><option>Other</option></select></div><div class="field"><label>Order reference (optional)</label><input id="staffTicketOrder" placeholder="#NS-1048"></div><div class="field full"><label>Subject</label><input id="staffTicketSubject" placeholder="What do you need help with?"></div><div class="field full"><label>Message</label><textarea id="staffTicketMessage" placeholder="Describe the issue..."></textarea></div><div class="field full"><button class="btn" onclick="submitStaffTicket('Deliverer')">Send to admin</button></div></div>`)}</div>${panel('My support requests',mine.length?mine.map(t=>`<div class="ticket"><div class="ticket-top"><b>${t.id} · ${t.subject}</b>${status(t.status)}</div><p class="smalltext">${t.date}</p><p style="font-size:12px">${t.message}</p></div>`).join(''):'<p class="smalltext">No delivery support requests yet.</p>')}</div>`;
+}
+function submitStaffTicket(which){
+  const subject=document.getElementById('staffTicketSubject')?.value.trim();
+  const message=document.getElementById('staffTicketMessage')?.value.trim();
+  if(!subject||!message){toast('Please complete the subject and message.');return;}
+  const id='#TK-'+(which==='Worker'?'W':'D')+String(staffState.tickets.length+1).padStart(2,'0');
+  staffState.tickets.unshift({id,role:which,subject,message,status:'Pending',date:'Just now'});
+  toast('Support request sent to admin.');render();
+}
+function profile(title){
+  const worker=role==='worker',deliverer=role==='deliverer';
+  const initials=worker?'WK':deliverer?'DL':'AD';
+  const history=worker?staffState.workerHistory:staffState.deliveryHistory;
+  const historyTitle=worker?'Orders prepared':'Deliveries completed';
+  const rows=worker?history.map(x=>[x.id,x.client,x.items,x.date,status(x.outcome)]):history.map(x=>[x.id,x.client,x.address,x.date,status(x.outcome),x.paymentStatus]);
+  return heading(title,'Your account details and a record of the work you have completed.')+
+    `<div class="grid two-col"><div class="profile-card"><div class="profile-circle">${initials}</div><h2 style="font:22px Georgia;margin:0 0 6px">${worker?'Nóstimo Worker':deliverer?'Nóstimo Deliverer':'Nóstimo Admin'}</h2><p style="font-size:12px;opacity:.85">team@nostimo.bake</p><span class="tag" style="background:#ffffff25;color:white">Active account</span><div style="margin-top:16px;text-align:left">${worker||deliverer?availabilitySelect(worker?'Worker':'Deliverer'):''}</div></div>${panel('Personal Information',`<div class="form-grid"><div class="field"><label>Full name</label><input value="${worker?'Nóstimo Worker':deliverer?'Nóstimo Deliverer':'Admin User'}"></div><div class="field"><label>Email address</label><input value="team@nostimo.bake"></div><div class="field"><label>Phone number</label><input value="+212 600 000 000"></div><div class="field"><label>Address</label><input placeholder="Enter your address"></div><div class="field full"><button class="btn" onclick="toast('Profile changes saved in this demo.')">Save Changes</button></div></div>`)}</div>`+
+    (worker||deliverer?panel(historyTitle,history.length?table(worker?['Order','Customer','Items','Date','Work status']:['Order','Customer','Destination','Date','Delivery status','Payment'],rows):'<p class="smalltext">Your completed work will appear here.</p>'):'');
+}
+function updateWorkerOrder(id){
+  const o=workerOrders.find(x=>x.id===id);if(!o)return;
+  if(o.status!=='Ready for pickup'){
+    o.status='Ready for pickup';
+    staffState.workerHistory.unshift({id:o.id,client:o.client,items:o.items,date:'06 Nov 2026',outcome:'Prepared',worker:'Nadia E.',deliverer:'Not delivered'});
+  }
+  toast(id+' marked as prepared and added to your work history.');render();
+}
+function updateDelivery(id,cashReceived=false){
+  const o=myDeliveries.find(x=>x.id===id);if(!o)return;
+  o.status='Delivered';
+  if(o.paymentMethod==='Cash on delivery'){
+    o.paymentStatus=cashReceived?'Paid':'Unpaid';
+    let p=staffState.payments.find(x=>x.order===id);
+    if(!p){p={id:'#PAY-'+String(3000+staffState.payments.length+1),order:id,method:'Cash on delivery',amount:o.amount||0,status:'Unpaid',collector:'Omar K.',date:'Today'};staffState.payments.unshift(p);}
+    p.status=cashReceived?'Paid':'Unpaid';p.collector='Omar K.';p.date='Today';
+  } else o.paymentStatus='Paid';
+  staffState.deliveryHistory.unshift({id:o.id,client:o.client,address:o.address,date:'06 Nov 2026',outcome:'Delivered',deliverer:'Omar K.',paymentMethod:o.paymentMethod||'Card',paymentStatus:o.paymentStatus||'Paid'});
+  toast(cashReceived?'Delivery completed. Cash received and payment marked PAID.':'Delivery marked as completed.');render();
+}
+function availableDeliveriesPage(){
+  const rows=availableDeliveries.map(o=>[o.id,o.client,o.address,o.ready,status(o.status),`<button class="btn small" onclick="acceptDelivery('${o.id}')">Accept delivery</button>`]);
+  return heading('Available Deliveries','Choose a prepared order you can deliver.')+(rows.length?panel('Orders ready for delivery',table(['Order','Recipient','Address','Ready at','Status','Action'],rows)):panel('No available deliveries','There are currently no prepared orders waiting for a deliverer.'));
+}
+function delivererPage(){
+  if(page==='Dashboard')return dashboard('Deliverer');
+  if(page==='Available Deliveries')return availableDeliveriesPage();
+  if(page==='My Deliveries')return listPage(page,'Deliveries you accepted. Confirm cash collection when the customer pays in cash.',['Order','Recipient','Address','Status','Payment','Action'],myDeliveries.map(o=>{
+    if(!o.paymentMethod)o.paymentMethod='Cash on delivery';
+    if(!o.amount)o.amount=28.45;
+    if(!o.paymentStatus)o.paymentStatus='Unpaid';
+    const action=o.status==='Delivered'?'<span class="smalltext">Completed</span>':o.paymentMethod==='Cash on delivery'
+      ?`<div class="toolbar"><button class="btn small olive" onclick="updateDelivery('${o.id}',true)">Delivered + cash received</button><button class="btn light small" onclick="updateDelivery('${o.id}',false)">Delivered · not paid</button></div>`
+      :`<button class="btn small" onclick="updateDelivery('${o.id}',false)">Mark delivered</button>`;
+    return [o.id,o.client,o.address,status(o.status),status(o.paymentStatus),action];
+  }));
+  if(page==='Delivery History')return listPage(page,'Your completed and unsuccessful delivery attempts.',['Order','Recipient','Address','Date','Outcome','Payment'],staffState.deliveryHistory.map(o=>[o.id,o.client,o.address,o.date,status(o.outcome),status(o.paymentStatus)]));
+  if(page==='Support')return delivererSupportPage();
+  if(page==='Availability')return availability();
+  return profile('Profile');
+}
+function workerPage(){
+  if(page==='Dashboard')return dashboard('Worker');
+  if(page==='Available Orders')return availableOrdersPage();
+  if(page==='Assigned Orders')return listPage(page,'Orders you accepted and are responsible for preparing.',['Order','Customer','Items','Status','Action'],workerOrders.map(o=>[o.id,o.client,o.items,status(o.status),o.status==='Ready for pickup'?'<span class="smalltext">Completed</span>':`<button class="btn small" onclick="updateWorkerOrder('${o.id}')">Mark as prepared</button>`]));
+  if(page==='Order History')return listPage(page,'Completed and previously handled orders, including the staff members responsible.',['Order','Customer','Items','Prepared by (Worker)','Delivered by (Deliverer)','Outcome','Date'],staffState.workerHistory.map(o=>{const a=orderStaffAttribution(o.id);return [o.id,o.client,o.items,o.worker||a.worker,o.deliverer||a.deliverer,status(o.outcome),o.date]}));
+  if(page==='Support')return workerSupportPage();
+  if(page==='Availability')return availability();
+  return profile('Profile');
+}
+function adminProductForm(){
+  return heading('Add Product','Enter all product information before publishing it to the client menu.')+
+  panel('Product information',`<form id="newProductForm" onsubmit="saveNewProduct(event)">
+    <div class="form-grid">
+      <div class="field full"><label>Product image</label><input type="file" id="newProductImage" accept="image/*" onchange="previewProductImage(event)"><div id="productImagePreview" class="product-photo" style="min-height:150px;font-size:15px">Image preview</div></div>
+      <div class="field"><label>Product title *</label><input id="newProductName" required placeholder="e.g. Pistachio Cookie"></div>
+      <div class="field"><label>Category *</label><select id="newProductCategory" required><option value="">Select category</option><option>Cookies</option><option>Brownies</option><option>Drinks</option><option>Other</option></select></div>
+      <div class="field"><label>Price (MAD) *</label><input id="newProductPrice" type="number" min="0" step="0.01" required placeholder="25.00"></div>
+      <div class="field"><label>Stock quantity *</label><input id="newProductStock" type="number" min="0" step="1" required placeholder="20"></div>
+      <div class="field full"><label>Description *</label><textarea id="newProductDescription" required placeholder="Describe ingredients, flavour, size and product details..."></textarea></div>
+      <div class="field"><label>Ingredients</label><input id="newProductIngredients" placeholder="Flour, butter, chocolate..."></div>
+      <div class="field"><label>Allergens</label><input id="newProductAllergens" placeholder="Gluten, dairy, nuts..."></div>
+      <div class="field"><label>Preparation time (minutes)</label><input id="newProductPrep" type="number" min="0" placeholder="15"></div>
+      <div class="field"><label>Availability</label><select id="newProductAvailability"><option>Available</option><option>Hidden</option></select></div>
+      <div class="field full"><label><input type="checkbox" id="newProductFeatured"> Feature this product on the homepage</label></div>
+      <div class="field full"><button class="btn olive" type="submit">Save product</button> <button class="btn light" type="button" onclick="go('Products')">Cancel</button></div>
+    </div></form>`);
+}
+function previewProductImage(event){
+  const file=event.target.files&&event.target.files[0];if(!file)return;
+  const reader=new FileReader();reader.onload=()=>{productImageDraft=reader.result;const el=document.getElementById('productImagePreview');el.innerHTML=`<img src="${productImageDraft}" alt="Product preview" style="max-width:100%;max-height:190px;object-fit:contain;border-radius:10px">`;};reader.readAsDataURL(file);
+}
+function saveNewProduct(event){
+  event.preventDefault();
+  const name=document.getElementById('newProductName').value.trim();
+  if(staffState.products.some(p=>p.name.toLowerCase()===name.toLowerCase())){toast('A product with this title already exists.');return;}
+  staffState.products.unshift({name,category:document.getElementById('newProductCategory').value,price:Number(document.getElementById('newProductPrice').value),stock:Number(document.getElementById('newProductStock').value),description:document.getElementById('newProductDescription').value.trim(),image:productImageDraft,ingredients:document.getElementById('newProductIngredients').value,allergens:document.getElementById('newProductAllergens').value,prep:document.getElementById('newProductPrep').value,availability:document.getElementById('newProductAvailability').value,featured:document.getElementById('newProductFeatured').checked});
+  productImageDraft='';toast('Product saved to the demo catalogue.');go('Products');
+}
+function weeklySpecialForm(){
+  return heading('Add Weekly Special','Choose a product and define its special price and promotion period.')+
+  panel('Weekly special details',`<form onsubmit="saveWeeklySpecial(event)"><div class="form-grid">
+    <div class="field full"><label>Product *</label><select id="specialProduct" required><option value="">Choose a product</option>${staffState.products.map(p=>`<option value="${p.name}">${p.name} — ${p.price.toFixed(2)} MAD</option>`).join('')}</select></div>
+    <div class="field"><label>Special price (MAD) *</label><input id="specialPrice" type="number" min="0" step="0.01" required></div>
+    <div class="field"><label>Promotion label</label><input id="specialLabel" placeholder="Weekly special"></div>
+    <div class="field"><label>Start date *</label><input id="specialStart" type="date" required></div>
+    <div class="field"><label>End date *</label><input id="specialEnd" type="date" required></div>
+    <div class="field full"><label>Special description</label><textarea id="specialDescription" placeholder="Describe why this product is special..."></textarea></div>
+    <div class="field full"><button class="btn olive" type="submit">Save weekly special</button> <button class="btn light" type="button" onclick="go('Weekly Specials')">Cancel</button></div>
+  </div></form>`);
+}
+function saveWeeklySpecial(event){
+  event.preventDefault();
+  const name=document.getElementById('specialProduct').value,start=document.getElementById('specialStart').value,end=document.getElementById('specialEnd').value;
+  if(end<start){toast('End date must be on or after the start date.');return;}
+  const product=staffState.products.find(p=>p.name===name);if(!product)return;
+  staffState.specials.unshift({name,price:Number(document.getElementById('specialPrice').value),start,end,description:document.getElementById('specialDescription').value});
+  product.weekly=true;toast('Weekly special saved.');go('Weekly Specials');
+}
+function adminPage(){
+  if(page==='Dashboard')return dashboard('Admin');
+  if(page==='Add Product')return adminProductForm();
+  if(page==='Weekly Special Form')return weeklySpecialForm();
+  if(page==='Products'){
+    const rows=staffState.products.map(p=>[p.name,p.category,p.price.toFixed(2)+' MAD',String(p.stock),status(p.stock===0?'Out of stock':p.stock<5?'Low stock':p.availability||'Active')]);
+    return listPage('Products','Manage product details, catalogue visibility and stock.', ['Product','Category','Price','Stock','Status'],rows,`<button class="btn" onclick="go('Add Product')">＋ Add product</button>`);
+  }
+  if(page==='Weekly Specials'){
+    const rows=staffState.specials.map(s=>[s.name,s.price.toFixed(2)+' MAD',s.start,s.end,status('Active')]);
+    return listPage('Weekly Specials','Manage featured products and their promotion periods.',['Special','Special price','Start date','End date','Status'],rows,`<button class="btn" onclick="go('Weekly Special Form')">＋ Add weekly special</button>`);
+  }
+  if(page==='Payments'){
+    const rows=staffState.payments.map(p=>[p.id,p.order,p.method,p.amount.toFixed(2)+' MAD',status(p.status),p.collector,p.date]);
+    return heading('Payments','Track payment method, amount and collection confirmation.')+panel('Payment records',table(['Payment','Order','Method','Amount','Payment status','Collected by','Date'],rows));
+  }
+  if(page==='Support'){
+    const rows=staffState.tickets.map(t=>[t.id,t.role,t.subject,t.date,status(t.status),`<button class="btn light small" onclick="resolveStaffTicket('${t.id}')">Mark resolved</button>`]);
+    return heading('Support','Respond to requests submitted by clients, workers and deliverers.')+panel('All support requests',table(['Ticket','From','Subject','Date','Status','Action'],rows));
+  }
+  if(page==='Analytics'){
+    return heading('Analytics','Historical performance, trends and business decisions.')+globalFilters()
+      +stats([['Revenue','$4,820','Selected period','＄'],['Orders','248','Selected period','▤'],['Average order','$19.44','Revenue / orders','◷'],['Returning clients','62%','Customer retention','♙'],['New clients','38','Selected period','＋'],['Cancellation rate','2.4%','Of all orders','↶'],['Avg. preparation','18 min','Per prepared order','◷'],['Avg. delivery','27 min','Per delivery','➜']])
+      +`<div class="grid two-col">${panel('Revenue and orders',`<div class="toolbar"><select class="search"><option>Day</option><option>Week</option><option>Month</option><option>Year</option></select><span class="smalltext">Revenue (bars) · Orders (line)</span></div><div style="height:180px;display:flex;align-items:end;gap:12px;padding:15px 4px;border-bottom:1px solid var(--line)">${[45,62,54,78,67,90,73].map((v,i)=>`<div style="flex:1;text-align:center"><div title="$${v*5}" style="height:${v*1.5}px;background:var(--olive);border-radius:5px 5px 0 0"></div><div class="smalltext">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]}</div></div>`).join('')}</div><p class="smalltext">Hover over bars for sample revenue values. Demo chart data.</p>`)}${panel('Orders by hour',`<div class="grid three-col">${[['09:00','8'],['12:00','24'],['15:00','17'],['18:00','31'],['20:00','19'],['22:00','5']].map(x=>`<div class="quick-link"><b>${x[0]}</b><div class="stat-value">${x[1]}</div><span class="smalltext">Orders</span></div>`).join('')}</div>`)}</div>
+      <div class="grid two-col">${panel('Top products',table(['Product','Units sold','Revenue'],[['Red Velvet Cookie','82','$409.18'],['Golden Brownie','68','$475.32'],['Matcha Latte','54','$323.46']]))}${panel('Least sold',table(['Product','Units sold'],[['Lotus Cookie','3'],['Hazelnut Brownie','5'],['Coffee Matcha Latte','7']]))}</div>
+      <div class="grid two-col">${panel('Sales by category',table(['Category','Revenue','Share'],[['Cookies','$1,850','42%'],['Brownies','$1,320','30%'],['Drinks','$1,230','28%']]))}${panel('Order type and payments',table(['Metric','Orders'],[['Delivery vs pickup','164 / 84'],['Cash','112'],['Card','86'],['Online','50']]))}</div>
+      <div class="grid two-col">${panel('Customers',table(['Segment','Count'],[['New clients','38'],['Returning clients','62%'],['Top customer spend','MAD 1,250'],['Main customer area','Centre-ville']]))}${panel('Delivery and worker performance',table(['Metric','Performance'],[['On-time delivery','92%'],['Average delivery','27 min'],['Orders per driver','14'],['Average preparation','18 min']]))}</div>`;
+  }
+  const data={
+    'Users':['Registered client accounts.',['Client','Email','Orders','Joined','Status'],[['Meriem A.','meriem@email.com','12','12 Oct',status('Active')],['Yasmine B.','yasmine@email.com','8','18 Oct',status('Active')],['Sara M.','sara@email.com','4','21 Oct',status('Active')],['Aya N.','aya@email.com','2','02 Nov',status('Active')]]],
+    'Employees':['Manage workers and deliverers.',['Name','Role','Email','Availability','Status'],[['Nadia E.','Worker','nadia@nostimo.bake',status(staffState.workerAvailability),status('Active')],['Imane R.','Worker','imane@nostimo.bake',status('Busy'),status('Active')],['Omar K.','Deliverer','omar@nostimo.bake',status(staffState.delivererAvailability),status('Active')]]],
+    'Categories':['Organise products into catalogue categories.',['Category','Products','Description','Status'],[['Cookies','8','Freshly baked cookies',status('Active')],['Brownies','5','Rich chocolate brownies',status('Active')],['Drinks','11','Coffee and matcha drinks',status('Active')]]],
+    'Orders':['Monitor all client orders and their progress, including who prepared and delivered each order.',['Order','Client','Items','Prepared by (Worker)','Delivered by (Deliverer)','Total','Status','Date'],orders.map(o=>{const a=orderStaffAttribution(o[0]);return [o[0],o[1],o[2],a.worker,a.deliverer,o[3],status(o[4]),o[5]]})],
+    'Assignments':['Monitor order preparation and delivery assignments.',['Order','Worker','Deliverer','Assigned at','Status'],[['#NS-1048','Nadia E.','Omar K.','10:40',status('In progress')],['#NS-1047','Imane R.','—','10:15',status('Preparing')],['#NS-1046','Nadia E.','Omar K.','Yesterday',status('Completed')]]],
+    'Deliveries':['Monitor delivery progress and outcomes.',['Order','Deliverer','Destination','Updated','Status'],[['#NS-1048','Omar K.','Centre-ville','10:45',status('Out for delivery')],['#NS-1042','Omar K.','Mhannech','11:20',status('Assigned')],['#NS-1039','Imane R.','Martil','Yesterday',status('Delivered')]]]
+  };
+  if(page==='Users')return userRolesPage();
+  if(data[page]){const d=data[page];return listPage(page,d[0],d[1],d[2],page==='Employees'?`<button class="btn" onclick="toast('Add employee form is a demo action.')">＋ Add employee</button>`:'');}
+  if(page==='Settings')return heading('Settings','Configure platform preferences and operational rules.')+`<div class="grid two-col">${panel('General Settings',`<div class="form-grid"><div class="field full"><label>Store name</label><input value="Nóstimo"></div><div class="field"><label>Contact email</label><input value="nostimo.bake@gmail.com"></div><div class="field"><label>Phone</label><input value="+212 600 000000"></div><div class="field"><label>Currency</label><select><option>MAD — Moroccan Dirham</option><option>USD — US Dollar</option></select></div><div class="field"><label>Timezone</label><select><option>Africa/Casablanca</option></select></div><div class="field full"><button class="btn" onclick="toast('Settings saved in this demo.')">Save Settings</button></div></div>`)}${panel('Order Rules',`<div class="field"><label>Default order status</label><select><option>Pending</option><option>Confirmed</option></select></div><div class="field" style="margin-top:14px"><label>Cancellation allowed before</label><select><option>Worker assignment</option><option>Preparation starts</option></select></div><div class="field" style="margin-top:14px"><label>Default delivery fee (MAD)</label><input value="0.00"></div>`)}</div>`;
+  return profile('Admin Profile');
+}
+function resolveStaffTicket(id){
+  const t=staffState.tickets.find(x=>x.id===id);if(t)t.status='Resolved';toast('Support ticket marked resolved.');render();
+}
+function clientProducts(){
+  const items=staffState.products.filter(p=>p.availability!=='Hidden');
+  return heading('Menu','Explore our freshly prepared cookies, brownies and drinks.',`<button class="btn olive" onclick="go('My Cart')">View cart</button>`)
+  + ['Cookies','Brownies','Drinks','Other'].map(cat=>{const group=items.filter(p=>p.category===cat);if(!group.length)return '';return `<div class="panel"><h2>${cat}</h2><div class="grid three-col">${group.map(p=>`<div class="quick-link" style="text-align:center"><div style="font-size:48px">${p.image?`<img src="${p.image}" alt="${p.name}" style="width:100%;height:130px;object-fit:cover;border-radius:9px">`:'🍪'}</div><b>${p.name}</b><p class="smalltext">${p.description||''}</p><p class="price" style="font-size:18px">${Number(p.price).toFixed(2)} MAD</p><button class="btn small" onclick="toast('${p.name.replace(/'/g,"\\'")} added to cart.')">Add to cart</button></div>`).join('')}</div></div>`;}).join('');
+}
+
+/* Add realistic payment metadata to the demo deliveries. */
+myDeliveries.forEach(o=>{o.paymentMethod=o.paymentMethod||'Cash on delivery';o.paymentStatus=o.paymentStatus||'Unpaid';o.amount=o.amount||28.45;});
+
+render();
+</script></body></html>
