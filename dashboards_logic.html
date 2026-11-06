@@ -54,8 +54,22 @@ let availableOrders=[
  {id:'#NS-1049',client:'Aya N.',items:'2 items',received:'10:58',status:'Waiting for worker'}
 ];
 let workerOrders=[
- {id:'#NS-1048',client:'Meriem A.',items:'5 items',received:'10:42',status:'Preparing'},
- {id:'#NS-1047',client:'Yasmine B.',items:'2 items',received:'10:18',status:'Ready'}
+ {
+   id:'#NS-1048',
+   client:'Meriem A.',
+   items:'5 items',
+   received:'10:42',
+   status:'Preparing',
+   fulfillment:'Delivery'
+ },
+ {
+   id:'#NS-1047',
+   client:'Yasmine B.',
+   items:'2 items',
+   received:'10:18',
+   status:'Ready',
+   fulfillment:'Pickup'
+ }
 ];
 let availableDeliveries=[
  {id:'#NS-1047',client:'Yasmine B.',address:'Centre-ville, Tétouan',ready:'10:18',status:'Ready for pickup'},
@@ -149,9 +163,46 @@ function updateWorkerOrder(id){
  const o=workerOrders.find(x=>x.id===id);if(!o)return;
  o.status='Ready for pickup';toast(id+' marked as prepared and ready for pickup.');render();
 }
+function confirmPickup(id) {
+  const o = workerOrders.find(x => x.id === id);
+  if (!o || o.fulfillment !== 'Pickup') return;
+
+  const p = getOrderPayment(id);
+
+  if (p && /cash/i.test(p.method)) {
+    p.status = 'Paid';
+    p.collector = 'Nadia E.';
+    p.date = 'Today';
+  }
+
+  o.status = 'Picked up';
+
+  toast('Pickup confirmed. Payment status updated.');
+  render();
+}
 function updateDelivery(id){
  const o=myDeliveries.find(x=>x.id===id);if(!o)return;
  o.status='Delivered';toast(id+' marked as delivered.');render();
+}
+function getOrderPayment(orderId) {
+  return staffState.payments.find(p => p.order === orderId);
+}
+
+function getPaymentMethod(orderId) {
+  const p = getOrderPayment(orderId);
+  if (!p) return 'Not recorded';
+
+  if (/card|online/i.test(p.method)) return 'Card / Online';
+  if (/cash/i.test(p.method)) return 'Cash';
+
+  return p.method;
+}
+
+function getPaymentStatus(orderId) {
+  const p = getOrderPayment(orderId);
+  if (!p) return 'Not recorded';
+
+  return p.status === 'Paid' ? 'Paid' : 'Unpaid';
 }
 function changeUserRole(i,newRole){
  userRoles[i].role=newRole;toast(userRoles[i].name+' role updated to '+newRole+'.');render();
@@ -180,13 +231,93 @@ function orderStaffAttribution(orderId){
     deliverer: delivered?.deliverer || (delivered ? 'Omar K.' : 'Not delivered')
   };
 }
-function workerPage(){
- if(page==='Dashboard')return dashboard('Worker');
- if(page==='Available Orders')return availableOrdersPage();
- if(page==='Assigned Orders')return listPage(page,'Orders you accepted and are responsible for preparing.',['Order','Customer','Items','Status','Action'],workerOrders.map(o=>[o.id,o.client,o.items,status(o.status),o.status==='Ready for pickup'?'<span class="smalltext">Completed</span>':`<button class="btn small" onclick="updateWorkerOrder('${o.id}')">Mark as prepared</button>`]));
- if(page==='Order History')return listPage(page,'Completed and previously handled orders.',['Order','Customer','Items','Outcome','Date'],[['#NS-1038','Sara M.','2 items',status('Completed'),'04 Nov'],['#NS-1032','Aya N.','3 items',status('Completed'),'03 Nov'],['#NS-1028','Salma R.','1 item',status('Completed'),'02 Nov']]);
- if(page==='Availability')return availability();return profile('Profile');
+
+function workerPage() {
+  if (page === 'Dashboard') return dashboard('Worker');
+
+  if (page === 'Available Orders') {
+    return availableOrdersPage();
+  }
+
+  if (page === 'Assigned Orders') {
+    return listPage(
+      page,
+      'Prepare orders and confirm customer pickups.',
+      ['Order', 'Customer', 'Items', 'Status', 'Payment', 'Action'],
+      workerOrders.map(o => {
+        const payment = getOrderPayment(o.id);
+        let action = '';
+
+        if (o.fulfillment === 'Pickup' && o.status === 'Ready for pickup') {
+          action = `<button class="btn small olive"
+            onclick="confirmPickup('${o.id}')">
+            Confirm customer pickup
+          </button>`;
+        } else if (
+          o.status !== 'Ready for pickup' &&
+          o.status !== 'Picked up'
+        ) {
+          action = `<button class="btn small"
+            onclick="updateWorkerOrder('${o.id}')">
+            Mark as prepared
+          </button>`;
+        } else {
+          action = '<span class="smalltext">Completed</span>';
+        }
+
+        return [
+          o.id,
+          o.client,
+          o.items,
+          status(o.status),
+          status(payment?.status || 'Unpaid'),
+          action
+        ];
+      })
+    );
+  }
+
+  if (page === 'Order History') {
+  return listPage(
+    page,
+    'Monitor orders, staff assignments and payment information.',
+    [
+      'Order',
+      'Client',
+      'Items',
+      'Prepared by (Worker)',
+      'Delivered by (Deliverer)',
+      'Payment Method',
+      'Payment Status',
+      'Total',
+      'Order Status',
+      'Date'
+    ],
+    orders.map(o => {
+      const a = orderStaffAttribution(o[0]);
+
+      return [
+        o[0],
+        o[1],
+        o[2],
+        a.worker,
+        a.deliverer,
+        getPaymentMethod(o[0]),
+        status(getPaymentStatus(o[0])),
+        o[3],
+        status(o[4]),
+        o[5]
+      ];
+    })
+  );
 }
+
+  if (page === 'Support') return workerSupportPage();
+  if (page === 'Availability') return availability();
+
+  return profile('Profile');
+}
+
 function delivererPage(){
  if(page==='Dashboard')return dashboard('Deliverer');
  if(page==='Available Deliveries')return availableDeliveriesPage();
@@ -202,7 +333,37 @@ const data={
 'Products':['Manage the products displayed in the client catalogue.',['Product','Category','Price','Stock','Status'],[['Red Velvet Cookie','Cookies','$4.99','24',status('Active')],['Golden Brownie','Brownies','$6.99','18',status('Active')],['Matcha Latte','Drinks','$5.99','12',status('Active')],['Lotus Cookie','Cookies','$4.99','0',status('Out of stock')]]],
 'Categories':['Organise products into catalogue categories.',['Category','Products','Description','Status'],[['Cookies','8','Freshly baked cookies',status('Active')],['Brownies','5','Rich chocolate brownies',status('Active')],['Drinks','11','Coffee and matcha drinks',status('Active')]]],
 'Weekly Specials':['Choose featured products and define their promotion period.',['Special','Price','Start date','End date','Status'],[['Tiramisu Cookie','$5.49','01 Nov','07 Nov',status('Active')],['Matcha Box','$18.00','08 Nov','14 Nov',status('Scheduled')]]],
-'Orders':['Monitor all client orders and their progress, including who prepared and delivered each order.',['Order','Client','Items','Prepared by (Worker)','Delivered by (Deliverer)','Total','Status','Date'],orders.map(o=>{const a=orderStaffAttribution(o[0]);return [o[0],o[1],o[2],a.worker,a.deliverer,o[3],status(o[4]),o[5]]})],
+'Orders': [
+  'Monitor orders, staff assignments and payment information.',
+  [
+    'Order',
+    'Client',
+    'Items',
+    'Prepared by (Worker)',
+    'Delivered by (Deliverer)',
+    'Payment Method',
+    'Payment Status',
+    'Total',
+    'Order Status',
+    'Date'
+  ],
+  orders.map(o => {
+    const a = orderStaffAttribution(o[0]);
+
+    return [
+      o[0],
+      o[1],
+      o[2],
+      a.worker,
+      a.deliverer,
+      getPaymentMethod(o[0]),
+      status(getPaymentStatus(o[0])),
+      o[3],
+      status(o[4]),
+      o[5]
+    ];
+  })
+],
 'Assignments':['Monitor order preparation and delivery assignments.',['Order','Worker','Deliverer','Assigned at','Status'],[['#NS-1048','Nadia E.','Omar K.','10:40',status('In progress')],['#NS-1047','Imane R.','—','10:15',status('Preparing')],['#NS-1046','Nadia E.','Omar K.','Yesterday',status('Completed')]]],
 'Deliveries':['Monitor delivery progress and outcomes.',['Order','Deliverer','Destination','Updated','Status'],[['#NS-1048','Omar K.','Centre-ville','10:45',status('Out for delivery')],['#NS-1042','Omar K.','Mhannech','11:20',status('Assigned')],['#NS-1039','Imane R.','Martil','Yesterday',status('Delivered')]]],
 'Payments':['Review payment records and collection status.',['Payment','Order','Method','Amount','Status','Date'],[['#PAY-2048','#NS-1048','Card','$28.45',status('Paid'),'Today'],['#PAY-2047','#NS-1047','Cash on delivery','$13.98',status('Pending'),'Today'],['#PAY-2046','#NS-1046','Card','$19.50',status('Paid'),'Yesterday']]],
@@ -487,8 +648,73 @@ function delivererPage(){
 function workerPage(){
   if(page==='Dashboard')return dashboard('Worker');
   if(page==='Available Orders')return availableOrdersPage();
-  if(page==='Assigned Orders')return listPage(page,'Orders you accepted and are responsible for preparing.',['Order','Customer','Items','Status','Action'],workerOrders.map(o=>[o.id,o.client,o.items,status(o.status),o.status==='Ready for pickup'?'<span class="smalltext">Completed</span>':`<button class="btn small" onclick="updateWorkerOrder('${o.id}')">Mark as prepared</button>`]));
-  if(page==='Order History')return listPage(page,'Completed and previously handled orders, including the staff members responsible.',['Order','Customer','Items','Prepared by (Worker)','Delivered by (Deliverer)','Outcome','Date'],staffState.workerHistory.map(o=>{const a=orderStaffAttribution(o.id);return [o.id,o.client,o.items,o.worker||a.worker,o.deliverer||a.deliverer,status(o.outcome),o.date]}));
+if(page==='Assigned Orders') return listPage(
+  page,
+  'Prepare orders and confirm customer pickups.',
+  ['Order','Customer','Items','Status','Payment','Action'],
+  workerOrders.map(o => {
+    const payment = getOrderPayment(o.id);
+
+    let action = '';
+
+    if (o.fulfillment === 'Pickup' && o.status === 'Ready for pickup') {
+      action = `<button class="btn small olive"
+        onclick="confirmPickup('${o.id}')">
+        Confirm customer pickup
+      </button>`;
+    } else if (o.status !== 'Ready for pickup' && o.status !== 'Picked up') {
+      action = `<button class="btn small"
+        onclick="updateWorkerOrder('${o.id}')">
+        Mark as prepared
+      </button>`;
+    } else {
+      action = '<span class="smalltext">Completed</span>';
+    }
+
+    return [
+      o.id,
+      o.client,
+      o.items,
+      status(o.status),
+      status(payment?.status || 'Unpaid'),
+      action
+    ];
+  })
+);  
+if (page === 'Order History') {
+  return listPage(
+    page,
+    'Monitor orders, staff assignments and payment information.',
+    [
+      'Order',
+      'Client',
+      'Items',
+      'Prepared by (Worker)',
+      'Delivered by (Deliverer)',
+      'Payment Method',
+      'Payment Status',
+      'Total',
+      'Order Status',
+      'Date'
+    ],
+    orders.map(o => {
+      const a = orderStaffAttribution(o[0]);
+
+      return [
+        o[0],
+        o[1],
+        o[2],
+        a.worker,
+        a.deliverer,
+        getPaymentMethod(o[0]),
+        status(getPaymentStatus(o[0])),
+        o[3],
+        status(o[4]),
+        o[5]
+      ];
+    })
+  );
+}
   if(page==='Support')return workerSupportPage();
   if(page==='Availability')return availability();
   return profile('Profile');
@@ -574,7 +800,37 @@ function adminPage(){
     'Users':['Registered client accounts.',['Client','Email','Orders','Joined','Status'],[['Meriem A.','meriem@email.com','12','12 Oct',status('Active')],['Yasmine B.','yasmine@email.com','8','18 Oct',status('Active')],['Sara M.','sara@email.com','4','21 Oct',status('Active')],['Aya N.','aya@email.com','2','02 Nov',status('Active')]]],
     'Employees':['Manage workers and deliverers.',['Name','Role','Email','Availability','Status'],[['Nadia E.','Worker','nadia@nostimo.bake',status(staffState.workerAvailability),status('Active')],['Imane R.','Worker','imane@nostimo.bake',status('Busy'),status('Active')],['Omar K.','Deliverer','omar@nostimo.bake',status(staffState.delivererAvailability),status('Active')]]],
     'Categories':['Organise products into catalogue categories.',['Category','Products','Description','Status'],[['Cookies','8','Freshly baked cookies',status('Active')],['Brownies','5','Rich chocolate brownies',status('Active')],['Drinks','11','Coffee and matcha drinks',status('Active')]]],
-    'Orders':['Monitor all client orders and their progress, including who prepared and delivered each order.',['Order','Client','Items','Prepared by (Worker)','Delivered by (Deliverer)','Total','Status','Date'],orders.map(o=>{const a=orderStaffAttribution(o[0]);return [o[0],o[1],o[2],a.worker,a.deliverer,o[3],status(o[4]),o[5]]})],
+    'Orders': [
+      'Monitor orders, staff assignments and payment information.',
+      [
+      'Order',
+      'Client',
+      'Items',
+      'Prepared by (Worker)',
+      'Delivered by (Deliverer)',
+      'Payment Method',
+      'Payment Status',
+      'Total',
+      'Order Status',
+      'Date'
+    ],
+    orders.map(o => {
+      const a = orderStaffAttribution(o[0]);
+
+      return [
+        o[0],
+        o[1],
+        o[2],
+        a.worker,
+        a.deliverer,
+        getPaymentMethod(o[0]),
+        status(getPaymentStatus(o[0])),
+        o[3],
+        status(o[4]),
+        o[5]
+      ];
+    })
+  ],
     'Assignments':['Monitor order preparation and delivery assignments.',['Order','Worker','Deliverer','Assigned at','Status'],[['#NS-1048','Nadia E.','Omar K.','10:40',status('In progress')],['#NS-1047','Imane R.','—','10:15',status('Preparing')],['#NS-1046','Nadia E.','Omar K.','Yesterday',status('Completed')]]],
     'Deliveries':['Monitor delivery progress and outcomes.',['Order','Deliverer','Destination','Updated','Status'],[['#NS-1048','Omar K.','Centre-ville','10:45',status('Out for delivery')],['#NS-1042','Omar K.','Mhannech','11:20',status('Assigned')],['#NS-1039','Imane R.','Martil','Yesterday',status('Delivered')]]]
   };
